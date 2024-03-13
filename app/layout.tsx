@@ -17,9 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} flex flex-row gap-7`}>
-        <SideBar />
-        {children}
+      <body className={`${inter.className} grid grid-cols-layout`}>
+        <SideBar className="px-6 py-4 h-screen w-80" />
+        <section className="flex flex-col px-6 py-4">{children}</section>
+        {/* <SideBar className="px-6 py-4 h-screen w-80" /> */}
       </body>
     </html>
   )
