@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import SideBar from './ui/SideBar'
+import { exo2 } from './ui/fonts'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,10 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} grid grid-cols-layout`}>
-        <SideBar className="px-6 py-4 h-screen w-80" />
-        <section className="flex flex-col px-6 py-4">{children}</section>
-        {/* <SideBar className="px-6 py-4 h-screen w-80" /> */}
+      <body className={`${exo2.className}`}>
+        <main className="grid grid-cols-layout max-w-[1300px] m-auto">
+          <SideBar className="px-6 py-4 h-screen w-80" />
+          <section className="flex flex-col px-6 py-4">{children}</section>
+          {/* <SideBar className="px-6 py-4 h-screen w-80" /> */}
+        </main>
       </body>
     </html>
   )
