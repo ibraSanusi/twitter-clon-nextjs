@@ -13,6 +13,9 @@ const config: Config = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      gridTemplateColumns: {
+        layout: "320px minmax(500px, 1fr) 320px",
+      },
     },
   },
   plugins: [],
