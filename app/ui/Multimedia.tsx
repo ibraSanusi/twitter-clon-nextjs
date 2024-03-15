@@ -20,12 +20,12 @@ export default function Multimedia() {
   return multimediaList.map((multimedia) => {
     const MultimediaIcon: ComponentType = multimedia.icon
     return (
-      <div className="flex flex-row gap-2" key={multimedia.name}>
+      <button className="flex flex-row gap-2" key={multimedia.name}>
         <i className="size-6">
           <MultimediaIcon />
         </i>
         <span className="font-bold">{multimedia.name}</span>
-      </div>
+      </button>
     )
   })
 }
