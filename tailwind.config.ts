@@ -16,6 +16,20 @@ const config: Config = {
       gridTemplateColumns: {
         layout: '320px minmax(500px, 1fr) 320px',
       },
+      textColor: {
+        auth: '#4D47C3',
+        placeholder: '#A7A3FF',
+      },
+      backgroundColor: {
+        input: '#F0EFFF',
+        button: '#4D47C3',
+      },
+      outlineColor: {
+        button: '#4D47C3',
+      },
+      outlineOffset: {
+        '0.2': '0.2px',
+      },
     },
   },
   plugins: [],

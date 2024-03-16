@@ -1,6 +1,7 @@
 'use server'
 
 import { db } from '../services/db'
+const bcrypt = require('bcrypt')
 
 // Hacer un post
 export async function postTweet(formData: FormData) {
@@ -39,15 +40,18 @@ export async function register(formData: FormData) {
   const email = formData.get('email')?.toString()
   const password = formData.get('password')?.toString()
 
+  const hashedPassword = await bcrypt.hash(password, 10)
+  hashedPassword.toString()
+
   const data = { fullname, username, email, password }
 
-  if (fullname && username && email && password) {
+  if (fullname && username && email && hashedPassword) {
     await db.user.create({
       data: {
         email,
         fullname,
         username,
-        password,
+        password: hashedPassword,
       },
     })
   }

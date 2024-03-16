@@ -18,13 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${exo2.className}`}>
-        <main className="grid grid-cols-layout max-w-[1300px] m-auto">
-          <SideBar className="px-6 py-4 h-screen w-80" />
-          <section className="flex flex-col px-6 py-4">{children}</section>
-          {/* <SideBar className="px-6 py-4 h-screen w-80" /> */}
-        </main>
-      </body>
+      <body className={`${exo2.className} antialiased`}>{children}</body>
     </html>
   )
 }

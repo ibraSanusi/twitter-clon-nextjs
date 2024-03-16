@@ -20,5 +20,5 @@ model User {
   email    String @unique
   fullname String @db.VarChar(50)
   username String @db.VarChar(50)
-  password String @db.VarChar(50)
+  password String
 }
