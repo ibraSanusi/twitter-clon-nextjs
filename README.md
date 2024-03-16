@@ -27,3 +27,9 @@ Tendrá funcionalidades de sugurida como autenticación, acciones de usuarios co
 ### https://dribbble.com/Nixtio
 
 ![alt text](image.png)
+
+## Diseño de Logify web community
+
+### https://www.figma.com/file/DLbzjzDSNZE8S3hS5dRpsu/LOGIFY---WEB-LOGIN-UI-KIT-(Community)?type=design&node-id=0-1&mode=design&t=OrBOJaYz05D7kAPE-0
+
+![alt text](image-1.png)
