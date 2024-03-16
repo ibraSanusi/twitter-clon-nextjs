@@ -15,10 +15,10 @@ async function seedUsers(client) {
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS "User" (
         id SERIAL PRIMARY KEY,
-        fullname VARCHAR(255) NOT NULL,
-        username VARCHAR(255) NOT NULL,
-        email TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
+        fullname VARCHAR(50) NOT NULL,
+        username VARCHAR(50) NOT NULL,
+        email VARCHAR(50) NOT NULL UNIQUE,
+        password VARCHAR(50) NOT NULL
       );
     `
 
@@ -54,7 +54,7 @@ async function seedPosts(client) {
     const createTable = await client.sql`
       CREATE TABLE IF NOT EXISTS "Post" (
         id SERIAL PRIMARY KEY,
-        content VARCHAR(255) NOT NULL
+        content TEXT NOT NULL
       );
     `
 
