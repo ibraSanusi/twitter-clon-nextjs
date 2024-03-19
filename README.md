@@ -33,3 +33,13 @@ Tendrá funcionalidades de sugurida como autenticación, acciones de usuarios co
 ### https://www.figma.com/file/DLbzjzDSNZE8S3hS5dRpsu/LOGIFY---WEB-LOGIN-UI-KIT-(Community)?type=design&node-id=0-1&mode=design&t=OrBOJaYz05D7kAPE-0
 
 ![alt text](image-1.png)
+
+## Tecnologías utilizadas
+
+1. Prisma
+2. Nextauth (por ahora no)
+3. Tailwind
+4. React
+5. NextJs
+
+> (Aún está por mejorar el README.md)
