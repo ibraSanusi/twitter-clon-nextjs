@@ -1,6 +1,6 @@
-import TweetCards from '../ui/TweetCards'
-import TweetPost from '../ui/TweetPost'
-import { banger } from '../ui/fonts'
+import TweetCards from '@/app/ui/TweetCards'
+import TweetPost from '@/app/ui/TweetPost'
+import { banger } from '@/app/ui/fonts'
 
 export default function Page() {
   return (
