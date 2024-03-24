@@ -6,6 +6,10 @@ module.exports = {
         source: '/login',
         destination: '/pages/auth/login',
       },
+      {
+        source: '/home',
+        destination: '/pages/home',
+      },
     ]
   },
 }
