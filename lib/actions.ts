@@ -1,8 +1,10 @@
 'use server'
 
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { z } from 'zod'
+import { emailSchema } from './schemas'
 import { db } from '../services/db'
+import { LoginStatus } from './enums'
+import { redirect } from 'next/navigation'
 const bcrypt = require('bcrypt')
 
 // Hacer un post
@@ -20,37 +22,24 @@ export async function postTweet(formData: FormData) {
   console.log(content)
 }
 
-type ResponseData = {
-  error?: string
-  message?: string
-}
-
-// Esquema para el email
-const schema = z.object({
-  email: z.string({
-    invalid_type_error: 'Invalid Email',
-  }),
-})
-
 // Iniciar sesion
-export async function login(formData: FormData) {
-  const validatedFields = schema.safeParse({
+export async function login(
+  formData: FormData,
+  res?: NextApiResponse,
+): Promise<number> {
+  const validatedFields = emailSchema.safeParse({
     email: formData.get('email'),
   })
 
   // Return early if the form data is invalid
   if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-    }
+    return LoginStatus.ServerError
   }
 
   const email = formData.get('email')?.toString()
   const password = formData.get('password')?.toString()
 
-  // console.log(email, password)
-
-  if (!email || !password) return
+  if (!email || !password) return LoginStatus.Unauthorized
 
   const findedUser = await db.user.findUnique({
     where: {
@@ -58,34 +47,17 @@ export async function login(formData: FormData) {
     },
   })
 
-  // Crear respuesta
-  const invalidCredentials = new Response('Credenciales inválidas', {
-    status: 401,
-    headers: {
-      'Content-Type': 'text/plain',
-    },
-  })
-
-  const validCredentials = new Response('Inicio de sesión correctamente', {
-    status: 200,
-    headers: {
-      'Content-Type': 'text/plain',
-    },
-  })
-
   if (!findedUser) {
-    return invalidCredentials
+    return LoginStatus.Unauthorized
   }
 
   const userPasswordHash: string = findedUser.password
   const match = await bcrypt.compare(password, userPasswordHash)
 
   if (match) {
-    // console.log('Inicio de sesión correctamente')
-
-    return validCredentials
+    redirect('/home')
   } else {
-    return invalidCredentials
+    return LoginStatus.Unauthorized
   }
 }
 
