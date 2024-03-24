@@ -5,5 +5,5 @@ export default async function login(
   res: NextApiResponse,
 ) {
   console.log(request, res)
-  return res.status(400).json('Inicio de sesion correctamente.')
+  return res.status(401).json({ message: 'Inicio de sesion correctamente.' })
 }
