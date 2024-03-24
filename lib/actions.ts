@@ -1,11 +1,15 @@
 'use server'
 
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { emailSchema } from './schemas'
 import { db } from '../services/db'
 import { LoginStatus } from './enums'
 import { redirect } from 'next/navigation'
+import { ResponseData } from './interfaces'
 const bcrypt = require('bcrypt')
+
+const UNAUTHORIZED_MESSAGE =
+  'El nombre de tu cuenta o la contraseña son incorrectos.'
+const SERVER_ERROR_MESSAGE = 'Error en el servidor.'
 
 // Hacer un post
 export async function postTweet(formData: FormData) {
@@ -23,23 +27,30 @@ export async function postTweet(formData: FormData) {
 }
 
 // Iniciar sesion
-export async function login(
-  formData: FormData,
-  res?: NextApiResponse,
-): Promise<number> {
+export async function login(formData: FormData): Promise<ResponseData> {
+  const emailData = formData.get('email')
+  const passwordData = formData.get('password')
+
   const validatedFields = emailSchema.safeParse({
-    email: formData.get('email'),
+    email: emailData,
   })
 
   // Return early if the form data is invalid
   if (!validatedFields.success) {
-    return LoginStatus.ServerError
+    return {
+      code: LoginStatus.ServerError,
+      message: SERVER_ERROR_MESSAGE,
+    }
   }
 
-  const email = formData.get('email')?.toString()
-  const password = formData.get('password')?.toString()
+  const email = emailData?.toString()
+  const password = passwordData?.toString()
 
-  if (!email || !password) return LoginStatus.Unauthorized
+  if (!email || !password)
+    return {
+      code: LoginStatus.ServerError,
+      message: UNAUTHORIZED_MESSAGE,
+    }
 
   const findedUser = await db.user.findUnique({
     where: {
@@ -48,7 +59,10 @@ export async function login(
   })
 
   if (!findedUser) {
-    return LoginStatus.Unauthorized
+    return {
+      code: LoginStatus.ServerError,
+      message: UNAUTHORIZED_MESSAGE,
+    }
   }
 
   const userPasswordHash: string = findedUser.password
@@ -57,7 +71,10 @@ export async function login(
   if (match) {
     redirect('/home')
   } else {
-    return LoginStatus.Unauthorized
+    return {
+      code: LoginStatus.ServerError,
+      message: UNAUTHORIZED_MESSAGE,
+    }
   }
 }
 
