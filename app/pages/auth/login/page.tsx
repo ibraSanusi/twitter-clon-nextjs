@@ -1,59 +1,43 @@
 'use client'
 
 import { login } from '@/lib/actions'
+import { ResponseData } from '@/lib/interfaces'
 import { emailSchema } from '@/lib/schemas'
 import { EyeIcon } from '@heroicons/react/16/solid'
 import { EyeSlashIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 import { FormEvent, useState } from 'react'
 
-type LoginStatusMessages = {
-  200: 'Success'
-  401: 'Unauthorized'
-  500: 'Server Error'
-}
-
 export default function Page() {
-  const [response, setResponse] = useState<number | null>(null)
-  const [emailValidated, setEmailValidated] = useState<boolean>(false)
+  const [response, setResponse] = useState<string | null>(null)
+  const [emailValidated, setEmailValidated] = useState<boolean>(true)
   const [passwordVisibility, setPasswordVisibility] = useState<boolean>(false)
 
   // Enviar los datos del formulario al servidor si el correo es valido
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
+    setResponse(null)
+
     const formData = new FormData(e.currentTarget)
     const email = formData.get('email') as string
-    const password = formData.get('password') as string
 
     const validatedFields = emailSchema.safeParse({
       email: email,
     })
 
-    if (validatedFields) {
-      setEmailValidated(false)
-    } else {
+    if (validatedFields.success) {
       setEmailValidated(true)
+    } else {
+      setEmailValidated(false)
       return
     }
 
-    // const newResponse: number = await login(formData)
-    // const newResponse: any = await login(formData)
-    fetch('/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: formData,
-    }).then((res) => {
-      console.log('Funciono?')
-    })
-
-    // console.log('Funcionara?: ' + newResponse)
-
-    // if (newResponse) setResponse(newResponse)
+    if (validatedFields.success) {
+      const newResponse: ResponseData = await login(formData)
+      if (newResponse) setResponse(newResponse.message)
+    }
   }
 
   const handleClick = () => {
@@ -102,14 +86,10 @@ export default function Page() {
                 name="email"
                 required
               />
-              {emailValidated && (
+              {!emailValidated && (
                 <small className="text-red-600">El email no es valido.</small>
               )}
-              {response === 401 && (
-                <small className="text-red-600">
-                  El nombre de tu cuenta o la contraseña son incorrectos.
-                </small>
-              )}
+              {response && <small className="text-red-600">{response}</small>}
             </div>
             <div className="flex flex-col gap-4">
               <div className="flex flex-row justify-between items-center bg-input p-4 rounded-md">
@@ -121,6 +101,7 @@ export default function Page() {
                   required
                 />
                 <button
+                  type="button"
                   onClick={handleClick}
                   className="size-5 text-placeholder"
                 >
