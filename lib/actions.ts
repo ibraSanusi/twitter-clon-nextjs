@@ -5,7 +5,10 @@ import { db } from '../services/db'
 import { LoginStatus } from './enums'
 import { redirect } from 'next/navigation'
 import { ResponseData } from './interfaces'
+import { NextApiResponse } from 'next'
+
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const UNAUTHORIZED_MESSAGE =
   'El nombre de tu cuenta o la contraseña son incorrectos.'
@@ -22,12 +25,21 @@ export async function postTweet(formData: FormData) {
       },
     })
   }
-
-  console.log(content)
 }
 
 // Iniciar sesion
 export async function login(formData: FormData): Promise<ResponseData> {
+  const res = (
+    body: string,
+    {
+      status,
+      statusText,
+      headers,
+    }: { status?: number; statusText?: string; headers?: Headers },
+  ) => {
+    return new Response(body, { headers, status, statusText })
+  }
+
   const emailData = formData.get('email')
   const passwordData = formData.get('password')
 
@@ -46,11 +58,12 @@ export async function login(formData: FormData): Promise<ResponseData> {
   const email = emailData?.toString()
   const password = passwordData?.toString()
 
-  if (!email || !password)
+  if (!email || !password) {
     return {
       code: LoginStatus.ServerError,
-      message: UNAUTHORIZED_MESSAGE,
+      message: SERVER_ERROR_MESSAGE,
     }
+  }
 
   const findedUser = await db.user.findUnique({
     where: {
@@ -60,7 +73,7 @@ export async function login(formData: FormData): Promise<ResponseData> {
 
   if (!findedUser) {
     return {
-      code: LoginStatus.ServerError,
+      code: LoginStatus.Unauthorized,
       message: UNAUTHORIZED_MESSAGE,
     }
   }
@@ -68,11 +81,39 @@ export async function login(formData: FormData): Promise<ResponseData> {
   const userPasswordHash: string = findedUser.password
   const match = await bcrypt.compare(password, userPasswordHash)
 
+  // Si las credenciales son correctas sacamos el id y el nombre de usuario de la base de datos
   if (match) {
-    redirect('/home')
+    const { id, username } = findedUser
+
+    const token = jwt.sign(
+      {
+        id,
+        username,
+        roles: ['user'],
+      },
+      'midudev',
+      { expiresIn: '1h' },
+      { algorithm: 'RS256' },
+    )
+
+    return {
+      code: LoginStatus.Success,
+      message: 'Success',
+      token,
+    }
+
+    // redirect('/home')
+
+    // // Verificar un token
+    // const decoded = jwt.verify(token, 'secret')
+
+    // // Extraer información del token
+    // const username = decoded.username
+    // const email = decoded.email
+    // const roles = decoded.roles
   } else {
     return {
-      code: LoginStatus.ServerError,
+      code: LoginStatus.Unauthorized,
       message: UNAUTHORIZED_MESSAGE,
     }
   }
