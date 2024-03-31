@@ -1,7 +1,5 @@
 'use client'
 
-import { login } from '@/lib/actions'
-import { ResponseData } from '@/lib/interfaces'
 import { emailSchema } from '@/lib/schemas'
 import { EyeIcon } from '@heroicons/react/16/solid'
 import { EyeSlashIcon } from '@heroicons/react/20/solid'
@@ -22,6 +20,7 @@ export default function Page() {
 
     const formData = new FormData(e.currentTarget)
     const email = formData.get('email') as string
+    const password = formData.get('password') as string
 
     const validatedFields = emailSchema.safeParse({
       email: email,
@@ -35,8 +34,16 @@ export default function Page() {
     }
 
     if (validatedFields.success) {
-      const newResponse: ResponseData = await login(formData)
-      if (newResponse) setResponse(newResponse.message)
+      const newResponse: string = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      }).then((res) => {
+        return res.text()
+      })
+      setResponse(newResponse)
     }
   }
 
