@@ -1,11 +1,13 @@
 'use client'
 
+import { StatusTexts } from '@/lib/enums'
 import { emailSchema } from '@/lib/schemas'
 import { EyeIcon } from '@heroicons/react/16/solid'
 import { EyeSlashIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import Link from 'next/link'
-import { FormEvent, useState } from 'react'
+import { redirect } from 'next/navigation'
+import { FormEvent, useEffect, useState } from 'react'
 
 export default function Page() {
   const [response, setResponse] = useState<string | null>(null)
@@ -40,7 +42,7 @@ export default function Page() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-      }).then((res) => {
+      }).then((res: Response) => {
         return res.text()
       })
       setResponse(newResponse)
