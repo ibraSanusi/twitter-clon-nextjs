@@ -2,17 +2,13 @@
 
 import { emailSchema } from './schemas'
 import { db } from '../services/db'
-import { LoginStatus } from './enums'
+import { LoginStatus, StatusTexts } from './enums'
 import { redirect } from 'next/navigation'
 import { ResponseData } from './interfaces'
 import { NextApiResponse } from 'next'
 
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
-const UNAUTHORIZED_MESSAGE =
-  'El nombre de tu cuenta o la contraseña son incorrectos.'
-const SERVER_ERROR_MESSAGE = 'Error en el servidor.'
 
 // Hacer un post
 export async function postTweet(formData: FormData) {
@@ -51,7 +47,7 @@ export async function login(formData: FormData): Promise<ResponseData> {
   if (!validatedFields.success) {
     return {
       code: LoginStatus.ServerError,
-      message: SERVER_ERROR_MESSAGE,
+      statusText: StatusTexts.ServerError,
     }
   }
 
@@ -61,7 +57,7 @@ export async function login(formData: FormData): Promise<ResponseData> {
   if (!email || !password) {
     return {
       code: LoginStatus.ServerError,
-      message: SERVER_ERROR_MESSAGE,
+      statusText: StatusTexts.ServerError,
     }
   }
 
@@ -74,7 +70,7 @@ export async function login(formData: FormData): Promise<ResponseData> {
   if (!findedUser) {
     return {
       code: LoginStatus.Unauthorized,
-      message: UNAUTHORIZED_MESSAGE,
+      statusText: StatusTexts.Unauthorized,
     }
   }
 
@@ -98,7 +94,7 @@ export async function login(formData: FormData): Promise<ResponseData> {
 
     return {
       code: LoginStatus.Success,
-      message: 'Success',
+      statusText: StatusTexts.Success,
       token,
     }
 
@@ -114,7 +110,7 @@ export async function login(formData: FormData): Promise<ResponseData> {
   } else {
     return {
       code: LoginStatus.Unauthorized,
-      message: UNAUTHORIZED_MESSAGE,
+      statusText: StatusTexts.Unauthorized,
     }
   }
 }
