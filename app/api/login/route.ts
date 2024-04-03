@@ -1,14 +1,15 @@
 import { login } from '@/lib/actions'
 import { LoginStatus } from '@/lib/enums'
 import { ResponseData } from '@/lib/interfaces'
+import { redirect } from 'next/navigation'
 import { NextRequest } from 'next/server'
 
 export async function POST(req: NextRequest) {
   const res = (
-    message: string,
+    statusText: string,
     { status, headers }: { status?: number; headers?: {} },
   ) => {
-    return new Response(message, {
+    return new Response(statusText, {
       status,
       headers,
     })
@@ -22,16 +23,16 @@ export async function POST(req: NextRequest) {
   formData.append('password', data.password)
 
   const actionResponse: ResponseData = await login(formData)
-  const { code: status, message, token } = actionResponse
+  const { code: status, statusText, token } = actionResponse
 
   if (status === LoginStatus.Success) {
-    return res(message, {
+    return res(statusText, {
       status,
       headers: {
         'Set-Cookie': `token=${token}; HttpOnly; path=/; Max-Age=2592000; Secure`,
       },
     })
   } else {
-    return res(message, { status })
+    return res(statusText, { status })
   }
 }
