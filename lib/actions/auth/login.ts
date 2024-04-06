@@ -1,27 +1,10 @@
-'use server'
-
-import { emailSchema } from './schemas'
-import { db } from '../services/db'
-import { LoginStatus, StatusTexts } from './enums'
-import { redirect } from 'next/navigation'
-import { ResponseData } from './interfaces'
-import { NextApiResponse } from 'next'
+import { db } from '@/services/db'
+import { LoginStatus, StatusTexts } from '../../enums'
+import { emailSchema } from '../../schemas'
+import { ResponseData } from '../../interfaces'
 
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
-// Hacer un post
-export async function postTweet(formData: FormData) {
-  const content = formData.get('content')?.toString()
-
-  if (content) {
-    await db.post.create({
-      data: {
-        content,
-      },
-    })
-  }
-}
 
 // Iniciar sesion
 export async function login(formData: FormData): Promise<ResponseData> {
@@ -99,44 +82,10 @@ export async function login(formData: FormData): Promise<ResponseData> {
     }
 
     // redirect('/home')
-
-    // // Verificar un token
-    // const decoded = jwt.verify(token, 'secret')
-
-    // // Extraer información del token
-    // const username = decoded.username
-    // const email = decoded.email
-    // const roles = decoded.roles
   } else {
     return {
       code: LoginStatus.Unauthorized,
       statusText: StatusTexts.Unauthorized,
     }
   }
-}
-
-// Registrarse
-export async function register(formData: FormData) {
-  const fullname = formData.get('fullname')?.toString()
-  const username = formData.get('username')?.toString()
-  const email = formData.get('email')?.toString()
-  const password = formData.get('password')?.toString()
-
-  const hashedPassword = await bcrypt.hash(password, 10)
-  hashedPassword.toString()
-
-  const data = { fullname, username, email, password }
-
-  if (fullname && username && email && hashedPassword) {
-    await db.user.create({
-      data: {
-        email,
-        fullname,
-        username,
-        password: hashedPassword,
-      },
-    })
-  }
-
-  console.log(email, fullname, username, password)
 }

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Multimedia from './Multimedia'
 import { ChangeEvent, FormEvent, useRef, useState } from 'react'
 import { useAutosizeTextArea } from '@/lib/UseAutosizeTextArea'
-import { postTweet } from '@/lib/actions'
+import { postTweet } from '@/lib/actions/posts/postTweet'
 
 export default function TweetPost() {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -33,7 +33,7 @@ export default function TweetPost() {
         />
         <textarea
           onChange={handleChange}
-          className={`w-full outline-none resize-none pt-0.5`}
+          className="w-full outline-none resize-none pt-0.5"
           rows={1}
           ref={textareaRef}
           name="content"

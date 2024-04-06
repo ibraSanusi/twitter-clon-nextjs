@@ -1,4 +1,4 @@
-import { login } from '@/lib/actions'
+import { login } from '@/lib/actions/auth/login'
 import { LoginStatus } from '@/lib/enums'
 import { ResponseData } from '@/lib/interfaces'
 import { redirect } from 'next/navigation'

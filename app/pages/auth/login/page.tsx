@@ -1,13 +1,11 @@
 'use client'
 
-import { StatusTexts } from '@/lib/enums'
 import { emailSchema } from '@/lib/schemas'
 import { EyeIcon } from '@heroicons/react/16/solid'
 import { EyeSlashIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 export default function Page() {
   const [response, setResponse] = useState<string | null>(null)

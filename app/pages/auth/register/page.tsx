@@ -1,4 +1,4 @@
-import { register } from '@/lib/actions'
+import { register } from '@/lib/actions/register'
 import { EyeIcon } from '@heroicons/react/16/solid'
 import { EyeSlashIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
