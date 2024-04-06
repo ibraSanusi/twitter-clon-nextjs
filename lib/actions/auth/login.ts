@@ -1,3 +1,5 @@
+'use server'
+
 import { db } from '@/services/db'
 import { LoginStatus, StatusTexts } from '../../enums'
 import { emailSchema } from '../../schemas'

@@ -1,3 +1,5 @@
+'use server'
+
 import { db } from '@/services/db'
 
 // Hacer un post

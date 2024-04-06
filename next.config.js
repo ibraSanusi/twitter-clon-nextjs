@@ -4,15 +4,11 @@ module.exports = {
     return [
       {
         source: '/login',
-        destination: '/pages/auth/login',
+        destination: '/auth/login',
       },
       {
         source: '/register',
-        destination: '/pages/auth/register',
-      },
-      {
-        source: '/home',
-        destination: '/pages/home',
+        destination: '/auth/register',
       },
     ]
   },

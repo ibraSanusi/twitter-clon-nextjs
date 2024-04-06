@@ -1,10 +1,9 @@
-import { register } from '@/lib/actions/register'
-import { EyeIcon } from '@heroicons/react/16/solid'
+import { register } from '@/lib/actions/auth/register'
 import { EyeSlashIcon } from '@heroicons/react/20/solid'
 import Image from 'next/image'
 import Link from 'next/link'
 
-export default function Page() {
+export default async function Page() {
   return (
     <section className="grid grid-cols-2 justify-center w-full h-dvh py-8">
       {/* Left section */}

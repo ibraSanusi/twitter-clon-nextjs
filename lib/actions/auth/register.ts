@@ -1,3 +1,5 @@
+'use server'
+
 import { db } from '@/services/db'
 
 const bcrypt = require('bcrypt')
