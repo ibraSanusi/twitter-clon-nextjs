@@ -7,6 +7,10 @@ module.exports = {
         destination: '/pages/auth/login',
       },
       {
+        source: '/register',
+        destination: '/pages/auth/register',
+      },
+      {
         source: '/home',
         destination: '/pages/home',
       },
