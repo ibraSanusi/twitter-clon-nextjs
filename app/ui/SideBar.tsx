@@ -1,5 +1,8 @@
+'use client'
+
 import Image from 'next/image'
 import NavLinks from './NavLinks'
+import { signOut } from 'next-auth/react'
 
 interface props {
   className: string
@@ -22,7 +25,17 @@ export default function SideBar({ className }: props) {
 
       <NavLinks />
 
-      <footer></footer>
+      <footer>
+        {/* TODO: mejorar diseno */}
+        <button
+          className="py-2 px-4 bg-orange-200 rounded-xl"
+          onClick={() => {
+            signOut()
+          }}
+        >
+          SignOut
+        </button>
+      </footer>
     </section>
   )
 }
