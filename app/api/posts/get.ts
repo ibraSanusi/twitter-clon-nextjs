@@ -1,6 +1,6 @@
 import { Post } from '@prisma/client'
 import { NextApiRequest } from 'next'
-import { db } from '@/services/db'
+import db from '@/services/db'
 
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
