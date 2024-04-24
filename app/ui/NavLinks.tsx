@@ -46,7 +46,7 @@ export default function NavLinks() {
     },
   ]
   return (
-    <div className="flex flex-col gap-3">
+    <section className="flex flex-col gap-3">
       {links.map((link, index) => {
         const LinkIcon: ComponentType = link.icon
         return (
@@ -57,7 +57,7 @@ export default function NavLinks() {
               'list-none flex flex-row gap-3 items-center px-4 py-2 rounded-2xl font-bold hover:bg-black hover:text-white',
               {
                 'bg-black text-white hover:bg-black': pathname === link.href,
-              }
+              },
             )}
           >
             <div className="size-8">
@@ -67,6 +67,6 @@ export default function NavLinks() {
           </Link>
         )
       })}
-    </div>
+    </section>
   )
 }

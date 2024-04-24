@@ -5,7 +5,7 @@ import { EllipsisVerticalIcon } from '@heroicons/react/16/solid'
 interface Comment {
   avatarUrl: string
   username: string
-  time: string
+  createdAt: string
   content: string
   mediaUrl: string[]
   liked: boolean
@@ -14,10 +14,10 @@ interface Comment {
   repostCount: number
 }
 
-interface Post {
+interface PostResponse {
   avatarUrl: string
   username: string
-  time: string
+  createdAt: string
   content: string
   mediaUrl: string[]
   liked: boolean
@@ -28,11 +28,11 @@ interface Post {
 }
 
 export default function TweetCards() {
-  const posts: Post[] = [
+  const posts: PostResponse[] = [
     {
       avatarUrl: '/kira.jpg',
       username: 'Kira',
-      time: 'hace 2 horas',
+      createdAt: 'hace 2 horas',
       content:
         'Hi everyone, today I was on the most beautiful mountain in the world 😍, I also want to say hi to Silena, Olya and Davis!',
       mediaUrl: ['url_del_media1', 'url_del_media2'],
@@ -44,7 +44,7 @@ export default function TweetCards() {
         {
           avatarUrl: '/kobe-bryant.jpg',
           username: 'Usuario2',
-          time: 'hace 1 hora',
+          createdAt: 'hace 1 hora',
           content:
             'I chose a wonderful coffe today, I wanted to tell you what product they have in stock - its a latte with coconut 🥥 milk.. delicious... its really incredibly tasty!!! 🤤',
           mediaUrl: [],
@@ -59,7 +59,7 @@ export default function TweetCards() {
     {
       avatarUrl: '/kobe-bryant.jpg',
       username: 'Kobe Bryant',
-      time: 'hace 5 horas',
+      createdAt: 'hace 5 horas',
       content:
         'I chose a wonderful coffe today, I wanted to tell you what product they have in stock - its a latte with coconut 🥥 milk.. delicious... its really incredibly tasty!!! 🤤',
       mediaUrl: [],
@@ -73,6 +73,7 @@ export default function TweetCards() {
     },
     // Puedes agregar más tweets aquí si lo deseas
   ]
+
   return posts.map((post) => (
     <article
       className="flex flex-col gap-4 bg-blue-200 p-8 rounded-2xl"
@@ -88,7 +89,7 @@ export default function TweetCards() {
         />
         <div className="w-full">
           <h2 className="font-bold text-md">{post.username}</h2>
-          <span className="text-sm">{post.time}</span>
+          <span className="text-sm">{post.createdAt}</span>
         </div>
 
         {/* TODO: Opciones de los tweets (eliminar, editar o lo que sea...) */}
