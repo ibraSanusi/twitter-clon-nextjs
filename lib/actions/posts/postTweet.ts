@@ -1,6 +1,6 @@
 'use server'
 
-import { db } from '@/services/db'
+import db from '@/services/db'
 
 // Hacer un post
 export async function postTweet(formData: FormData) {
