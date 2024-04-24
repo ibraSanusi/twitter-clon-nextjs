@@ -1,6 +1,6 @@
 'use server'
 
-import { db } from '@/services/db'
+import db from '@/services/db'
 
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
