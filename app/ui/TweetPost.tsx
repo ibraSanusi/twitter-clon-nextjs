@@ -5,11 +5,12 @@ import Image from 'next/image'
 import Multimedia from './Multimedia'
 import { ChangeEvent, FormEvent, useRef, useState } from 'react'
 import { useAutosizeTextArea } from '@/lib/UseAutosizeTextArea'
-import { postTweet } from '@/lib/actions/posts/postTweet'
+import { useSession } from 'next-auth/react'
 
 export default function TweetPost() {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [value, setValue] = useState('')
+  const { data: session, status } = useSession()
 
   useAutosizeTextArea(textareaRef.current, value)
 
@@ -18,10 +19,40 @@ export default function TweetPost() {
     setValue(textarea.value)
   }
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    // 1. Comprobar si el usuario esta logeado
+    if (status === 'authenticated' && session.user) {
+      // 2. Recuperar el email
+      const userSession = session.user
+      const email = userSession?.email
+      const content = 'Habla pe cacheraaaa!!!!'
+
+      if (!email) {
+        return
+      }
+
+      const postData: { email: string; content: string } = {
+        email: email,
+        content: content,
+      }
+
+      await fetch('/api/post/tweet', {
+        method: 'POST',
+        body: JSON.stringify(postData),
+      })
+    }
+
+    // 3. Llamar llamar a la API para postear el tweet con el email
+    // 4. Con la respuesta de la api confirmar si se ha subido
+    // 5. Limpiar el textarea
+  }
+
   return (
     <form
       className="flex flex-col p-8 bg-slate-200 gap-2 rounded-xl"
-      action={postTweet}
+      onSubmit={handleSubmit}
     >
       <div className="flex flex-row gap-3 bg-white pr-2 pl-1 py-1 rounded-3xl">
         <Image
