@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
-import SideBar from './ui/SideBar'
 import { exo2 } from './ui/fonts'
 
 const inter = Inter({ subsets: ['latin'] })
