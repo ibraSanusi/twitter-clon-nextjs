@@ -10,8 +10,7 @@ datasource db {
 
 model User {
   id        String   @id @default(uuid())
-  name      String
-  lastname  String
+  fullname  String
   email     String   @unique
   username  String
   password  String
@@ -35,7 +34,7 @@ model Post {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   userId    String
-  posts     Like[]
+  likes     Like[]
   comment   Comment[]
   retweet   Retweet[]
   user      User      @relation(fields: [userId], references: [id])
