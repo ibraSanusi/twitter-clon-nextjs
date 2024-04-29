@@ -6,11 +6,20 @@ import Multimedia from './Multimedia'
 import { ChangeEvent, FormEvent, useRef, useState } from 'react'
 import { useAutosizeTextArea } from '@/lib/UseAutosizeTextArea'
 import { useSession } from 'next-auth/react'
+import SuccessIcon from './icons/SuccessIcon'
+import CloseIcon from './icons/CloseIcon'
+import ErrorIcon from './icons/ErrorIcon'
+
+const ERROR_MESSAGE = 'Fallo al publicar el post.'
+const SUCCESS_MESSAGE = 'Tweet subido correctamente.'
 
 export default function TweetPost() {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [value, setValue] = useState('')
   const { data: session, status } = useSession()
+  const [error, setError] = useState(false)
+  const [postSuccessMessage, setPostSuccessMessage] = useState('')
+  const [toastVisibility, setToastVisibility] = useState(true)
 
   useAutosizeTextArea(textareaRef.current, value)
 
@@ -19,17 +28,25 @@ export default function TweetPost() {
     setValue(textarea.value)
   }
 
+  const closeToast = () => {
+    setToastVisibility(!toastVisibility)
+  }
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    // 1. Comprobar si el usuario esta logeado
-    if (status === 'authenticated' && session.user) {
+    setValue('')
+
+    // 1. Comprobar si el usuario está logeado
+    if (status === 'authenticated' && session?.user) {
       // 2. Recuperar el email
       const userSession = session.user
       const email = userSession?.email
-      const content = 'Habla pe cacheraaaa!!!!'
 
-      if (!email) {
+      // 3. Recuperar el contenido del textarea
+      const content = value
+
+      if (!email || !content) {
         return
       }
 
@@ -38,25 +55,41 @@ export default function TweetPost() {
         content: content,
       }
 
-      await fetch('/api/post/tweet', {
+      // 4. Llamar a la API para postear el tweet con el email
+      const res = await fetch('/api/post/tweet', {
         method: 'POST',
         body: JSON.stringify(postData),
       })
-    }
 
-    // 3. Llamar llamar a la API para postear el tweet con el email
-    // 4. Con la respuesta de la api confirmar si se ha subido
-    // 5. Limpiar el textarea
+      // 5. Con la respuesta de la API confirmar si se ha subido
+      const data: {
+        id: string
+        content: string
+        createdAt: Date
+        updatedAt: Date
+        userId: string
+      } = await res.json()
+
+      console.log('Respuesta del servidor: ', data.content)
+
+      // 6. Setear el error o no...
+      if (!res.ok) {
+        setError(true)
+        return
+      }
+      setError(false)
+    }
   }
 
+  // TODO: anadir funcionalidad de subir imagenes y demas archivos
   return (
     <form
-      className="flex flex-col p-8 bg-slate-200 gap-2 rounded-xl"
+      className="relative flex flex-col gap-2 rounded-xl bg-slate-200 p-8"
       onSubmit={handleSubmit}
     >
-      <div className="flex flex-row gap-3 bg-white pr-2 pl-1 py-1 rounded-3xl">
+      <div className="flex flex-row gap-3 rounded-3xl bg-white py-1 pl-1 pr-2">
         <Image
-          className="rounded-full max-h-[30px]"
+          className="max-h-[30px] rounded-full"
           src="/delba_oliveira.webp"
           alt="Avatar de usuario (EN SESION)"
           width={30}
@@ -64,27 +97,60 @@ export default function TweetPost() {
         />
         <textarea
           onChange={handleChange}
-          className="w-full outline-none resize-none pt-0.5"
+          className="w-full resize-none pt-0.5 outline-none"
           rows={1}
           ref={textareaRef}
           name="content"
           placeholder="Share something"
+          value={value}
         ></textarea>
-        <button className="size-6 mt-1 text-gray-500">
+        <button className="mt-1 size-6 text-gray-500">
           <FaceSmileIcon />
         </button>
       </div>
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-row items-center justify-between">
         <div className="flex flex-row gap-6">
           <Multimedia />
         </div>
         <button
           type="submit"
-          className="py-2 px-8 bg-black text-white rounded-3xl"
+          className="rounded-3xl bg-black px-8 py-2 text-white"
         >
           Post
         </button>
       </div>
+
+      <section
+        className={`mb-4 flex w-full max-w-xs items-center rounded-lg bg-white p-4 text-gray-500 shadow dark:bg-gray-800 dark:text-gray-400 ${!toastVisibility && 'hidden'}`}
+      >
+        {!error && (
+          <div className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+            <SuccessIcon />
+            <span className="sr-only">Check icon</span>
+          </div>
+        )}
+
+        {error && (
+          <div className="inline-flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-red-100 text-red-500 dark:bg-red-800 dark:text-red-200">
+            <ErrorIcon />
+            <span className="sr-only">Error icon</span>
+          </div>
+        )}
+
+        <span className="ms-3 text-sm font-normal">
+          {error && ERROR_MESSAGE}
+          {!error && SUCCESS_MESSAGE}
+        </span>
+        <button
+          onClick={closeToast}
+          type="button"
+          className="-mx-1.5 -my-1.5 ms-auto inline-flex h-8 w-8 items-center justify-center rounded-lg bg-white p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-900 focus:ring-2 focus:ring-gray-300 dark:bg-gray-800 dark:text-gray-500 dark:hover:bg-gray-700 dark:hover:text-white"
+        >
+          <span className="sr-only">Close</span>
+
+          <CloseIcon />
+        </button>
+      </section>
     </form>
   )
 }
