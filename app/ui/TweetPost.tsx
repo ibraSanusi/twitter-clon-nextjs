@@ -2,13 +2,13 @@
 
 import { FaceSmileIcon } from '@heroicons/react/16/solid'
 import Image from 'next/image'
-import Multimedia from './Multimedia'
+import Multimedia from '@/app/ui/Multimedia'
 import { ChangeEvent, FormEvent, useRef, useState } from 'react'
 import { useAutosizeTextArea } from '@/lib/UseAutosizeTextArea'
 import { useSession } from 'next-auth/react'
-import SuccessIcon from './icons/SuccessIcon'
-import CloseIcon from './icons/CloseIcon'
-import ErrorIcon from './icons/ErrorIcon'
+import SuccessIcon from '@/app/ui/icons/SuccessIcon'
+import CloseIcon from '@/app/ui/icons/CloseIcon'
+import ErrorIcon from '@/app/ui/icons/ErrorIcon'
 
 const ERROR_MESSAGE = 'Fallo al publicar el post.'
 const SUCCESS_MESSAGE = 'Tweet subido correctamente.'
@@ -56,6 +56,7 @@ export default function TweetPost() {
       }
 
       // 4. Llamar a la API para postear el tweet con el email
+      // TODO: mejorar el tipado del response
       const res = await fetch('/api/post/tweet', {
         method: 'POST',
         body: JSON.stringify(postData),

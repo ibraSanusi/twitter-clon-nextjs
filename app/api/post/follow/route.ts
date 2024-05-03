@@ -11,15 +11,23 @@ interface TweetInterface {
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    // console.log('Request: ', request)
-    // TODO: MEJOR LA COMPROBACION DE SESION CON EL TOKEN DEL USUARIO QUE SE ENCUENTRA EN EL HEADER
-    const body: { email: string; content: string } = await request.json()
+    const body: { email: string; followingId: string } = await request.json()
 
     const userEmail = body?.email ?? body.email
     if (!userEmail) {
       return new Response('El correo electrónico del usuario es requerido', {
         status: 400,
       })
+    }
+
+    const followingId = body?.followingId ?? body.followingId
+    if (!followingId) {
+      return new Response(
+        'El id del usuario al que se quiere seguir es requerido.',
+        {
+          status: 400,
+        },
+      )
     }
 
     const user = await db.user.findUnique({
@@ -34,21 +42,15 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     const userId = user.id
 
-    const content = body?.content
-    if (!content) {
-      return new Response('El contenido del tweet es requerido', {
-        status: 400,
-      })
-    }
-
-    const newTweet = await db.post.create({
+    // Seguir al usuario
+    const newFollow = await db.follow.create({
       data: {
-        userId,
-        content,
+        followerId: userId,
+        followingId: followingId,
       },
     })
 
-    return new Response(JSON.stringify(newTweet), { status: 201 })
+    return new Response(JSON.stringify(newFollow), { status: 201 })
   } catch (error) {
     console.error('Error al procesar la solicitud:', error)
     return new Response('Error interno del servidor', { status: 500 })

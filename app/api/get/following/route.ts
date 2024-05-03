@@ -11,9 +11,8 @@ interface TweetInterface {
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    // console.log('Request: ', request)
-    // TODO: MEJOR LA COMPROBACION DE SESION CON EL TOKEN DEL USUARIO QUE SE ENCUENTRA EN EL HEADER
-    const body: { email: string; content: string } = await request.json()
+    console.log('Request: ', request)
+    const body: { email: string } = await request.json()
 
     const userEmail = body?.email ?? body.email
     if (!userEmail) {
@@ -32,23 +31,38 @@ export async function POST(request: NextRequest): Promise<Response> {
       return new Response('Usuario no encontrado', { status: 404 })
     }
 
-    const userId = user.id
-
-    const content = body?.content
-    if (!content) {
-      return new Response('El contenido del tweet es requerido', {
-        status: 400,
-      })
-    }
-
-    const newTweet = await db.post.create({
-      data: {
-        userId,
-        content,
+    // Obtener todos los usuarios a los que sigue el usuario en sesion
+    const follow = await db.follow.findMany({
+      where: {
+        followerId: user.id,
       },
     })
 
-    return new Response(JSON.stringify(newTweet), { status: 201 })
+    let followingUsers: {
+      id: string
+      fullname: string
+      email: string
+      username: string
+      password: string
+    }[] = []
+
+    await Promise.all(
+      follow.map(async ({ followingId }) => {
+        const followingUser = await db.user.findUnique({
+          where: {
+            id: followingId,
+          },
+        })
+
+        if (!followingUser) {
+          return
+        }
+
+        followingUsers.push(followingUser)
+      }),
+    )
+
+    return new Response(JSON.stringify(followingUsers), { status: 201 })
   } catch (error) {
     console.error('Error al procesar la solicitud:', error)
     return new Response('Error interno del servidor', { status: 500 })

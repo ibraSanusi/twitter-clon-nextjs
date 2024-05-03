@@ -9,11 +9,17 @@ interface TweetInterface {
   userId: string
 }
 
+/**
+ * Consigue los usuarios a los que no sigue el usuario en sesion
+ * @param request
+ * @returns
+ */
+
+// TODO: CAMBIAR EL POST POR EL GET Y RECUPERAR LA SESION DEL USUARIO DEL HEADER
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    // console.log('Request: ', request)
-    // TODO: MEJOR LA COMPROBACION DE SESION CON EL TOKEN DEL USUARIO QUE SE ENCUENTRA EN EL HEADER
-    const body: { email: string; content: string } = await request.json()
+    console.log('Request: ', request)
+    const body: { email: string } = await request.json()
 
     const userEmail = body?.email ?? body.email
     if (!userEmail) {
@@ -32,23 +38,25 @@ export async function POST(request: NextRequest): Promise<Response> {
       return new Response('Usuario no encontrado', { status: 404 })
     }
 
-    const userId = user.id
-
-    const content = body?.content
-    if (!content) {
-      return new Response('El contenido del tweet es requerido', {
-        status: 400,
-      })
-    }
-
-    const newTweet = await db.post.create({
-      data: {
-        userId,
-        content,
+    // Obtener todos los usuarios a los que NO sigue el usuario en sesion
+    const unfollowedUsers = await db.user.findMany({
+      where: {
+        NOT: {
+          following: {
+            some: {
+              followerId: user.id,
+            },
+          },
+        },
+        AND: {
+          NOT: {
+            id: user.id,
+          },
+        },
       },
     })
 
-    return new Response(JSON.stringify(newTweet), { status: 201 })
+    return new Response(JSON.stringify(unfollowedUsers), { status: 201 })
   } catch (error) {
     console.error('Error al procesar la solicitud:', error)
     return new Response('Error interno del servidor', { status: 500 })
