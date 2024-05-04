@@ -12,7 +12,8 @@ interface TweetInterface {
 export async function POST(request: NextRequest): Promise<Response> {
   try {
     // console.log('Request: ', request)
-    // TODO: MEJOR LA COMPROBACION DE SESION CON EL TOKEN DEL USUARIO QUE SE ENCUENTRA EN EL HEADER
+    // TODO: MEJORAR LA COMPROBACION DE SESION CON EL TOKEN DEL USUARIO QUE SE ENCUENTRA EN EL HEADER
+    // TODO: SOLUCIONAR LA FECHA DE PUBLICACION ES INCORRECTA
     const body: { email: string; content: string } = await request.json()
 
     const userEmail = body?.email ?? body.email

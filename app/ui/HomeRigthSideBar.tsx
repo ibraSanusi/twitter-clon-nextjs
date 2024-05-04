@@ -37,7 +37,7 @@ export default function HomeRightSideBar({ className }: Props) {
 
       const data: UserData[] = await response.json()
 
-      console.log('DATA: ', data)
+      console.log('DATA follow: ', data)
 
       //TODO: Setear follow a true para cambiar el boton de seguir a seguido
     }
@@ -56,7 +56,7 @@ export default function HomeRightSideBar({ className }: Props) {
 
         const data: UserData[] = await response.json()
 
-        console.log('DATA: ', data)
+        console.log('DATA unfollowed users: ', data)
 
         setUnfollowedUsers(data)
       }

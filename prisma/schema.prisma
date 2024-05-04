@@ -14,6 +14,8 @@ model User {
   email     String   @unique
   username  String
   password  String
+  avatarUrl String?
+  role      Role     @default(USER)
   posts     Post[]
   followers Follow[] @relation("FollowFollower")
   following Follow[] @relation("FollowFollowing")
@@ -34,6 +36,7 @@ model Post {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   userId    String
+  mediaUrl  String[]
   likes     Like[]
   comment   Comment[]
   retweet   Retweet[]
@@ -47,6 +50,7 @@ model Comment {
   updatedAt      DateTime         @updatedAt
   userId         String
   postId         String
+  mediaUrl       String[]
   post           Post             @relation(fields: [postId], references: [id])
   LikeComment    LikeComment[]
   RetweetComment RetweetComment[]
@@ -82,4 +86,9 @@ model RetweetComment {
   userId    String
   commentId String
   comment   Comment  @relation(fields: [commentId], references: [id])
+}
+
+enum Role {
+  USER
+  ADMIN
 }
