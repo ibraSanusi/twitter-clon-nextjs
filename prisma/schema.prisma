@@ -9,85 +9,96 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  fullname  String
-  email     String   @unique
-  username  String
-  password  String
-  avatarUrl String?
-  role      Role     @default(USER)
-  posts     Post[]
-  followers Follow[] @relation("FollowFollower")
-  following Follow[] @relation("FollowFollowing")
-  likes     Like[]
+  id              String           @id @default(uuid())
+  fullname        String
+  email           String           @unique
+  username        String           @unique
+  password        String
+  avatarUrl       String           @default("/default-avatar.jpg")
+  role            Role             @default(USER)
+  tweets          Tweet[]
+  comments        Comment[]
+  followers       Follow[]         @relation("FollowFollower")
+  followings      Follow[]         @relation("FollowFollowing")
+  likes           Like[]
+  retweets        Retweet[]
+  commentLikes    CommentLike[]
+  commentRetweets CommentRetweet[]
 }
 
 model Follow {
-  id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   followerId  String
-  follower    User     @relation("FollowFollower", fields: [followerId], references: [id])
   followingId String
+  follower    User     @relation("FollowFollower", fields: [followerId], references: [id])
   following   User     @relation("FollowFollowing", fields: [followingId], references: [id])
+
+  @@id([followerId, followingId])
 }
 
 model Comment {
-  id             String           @id @default(uuid())
-  content        String
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  userId         String
-  postId         String
-  mediaUrl       String[]
-  post           Post             @relation(fields: [postId], references: [id])
-  LikeComment    LikeComment[]
-  RetweetComment RetweetComment[]
+  id              String           @id @default(uuid())
+  author          String
+  content         String
+  tweetId         String
+  createdAt       DateTime         @default(now())
+  mediaUrls       String[]
+  commentLikes    CommentLike[]
+  retweetComments CommentRetweet[]
+  tweet           Tweet            @relation(fields: [tweetId], references: [id])
+  user            User             @relation(fields: [author], references: [id])
 }
 
-model Post {
+model Tweet {
   id        String    @id @default(uuid())
+  author    String
   content   String
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  userId    String
-  mediaUrl  String[]
+  mediaUrls String[]
   likes     Like[]
   comments  Comment[]
-  retweet   Retweet[]
-  user      User      @relation(fields: [userId], references: [id])
+  retweets  Retweet[]
+  user      User      @relation(fields: [author], references: [id])
 }
 
 model Like {
-  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   userId    String
+  tweetId   String
   user      User     @relation(fields: [userId], references: [id])
-  postId    String
-  post      Post     @relation(fields: [postId], references: [id])
+  tweet     Tweet    @relation(fields: [tweetId], references: [id])
+
+  @@id([userId, tweetId])
 }
 
 model Retweet {
-  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   userId    String
-  postId    String
-  post      Post     @relation(fields: [postId], references: [id])
+  tweetId   String
+  tweet     Tweet    @relation(fields: [tweetId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@id([userId, tweetId])
 }
 
-model LikeComment {
-  id        String   @id @default(uuid())
+model CommentLike {
   createdAt DateTime @default(now())
   userId    String
   commentId String
   comment   Comment  @relation(fields: [commentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@id([userId, commentId])
 }
 
-model RetweetComment {
-  id        String   @id @default(uuid())
+model CommentRetweet {
   createdAt DateTime @default(now())
   userId    String
   commentId String
   comment   Comment  @relation(fields: [commentId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@id([userId, commentId])
 }
 
 enum Role {
