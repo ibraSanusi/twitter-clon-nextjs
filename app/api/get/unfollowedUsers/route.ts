@@ -18,7 +18,7 @@ interface TweetInterface {
 // TODO: CAMBIAR EL POST POR EL GET Y RECUPERAR LA SESION DEL USUARIO DEL HEADER
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    console.log('Request: ', request)
+    // console.log('Request: ', request)
     const body: { email: string } = await request.json()
 
     const userEmail = body?.email ?? body.email

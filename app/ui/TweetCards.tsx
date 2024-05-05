@@ -5,96 +5,10 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { PostResponse } from '@/lib/interfaces'
 
-interface Comment {
-  avatarUrl: string
-  username: string
-  createdAt: string
-  content: string
-  mediaUrl: string[]
-  liked: boolean
-  reposted: boolean
-  likeCount: number
-  repostCount: number
-}
-
-// interface PostResponse {
-//   avatarUrl: string
-//   username: string
-//   createdAt: string
-//   content: string
-//   mediaUrl: string[]
-//   liked: boolean
-//   reposted: boolean
-//   likeCount: number
-//   repostCount: number
-//   comments: Comment[]
-// }
-
-// interface Post {
-//   id: string
-//   content: string
-//   createdAt: Date
-//   updatedAt: Date
-//   userId: string
-// }
-
-// interface UserData {
-//   id: string
-//   fullname: string
-//   email: string
-//   username: string
-//   password: string
-// }
-
 export default function TweetCards() {
   const { data: session, status } = useSession()
   const [tweetCreatedAt, setTweetCreatedAt] = useState<string>()
   const [posts, setPosts] = useState<PostResponse[]>()
-  // const posts: PostResponse[] = [
-  //   {
-  //     avatarUrl: '/kira.jpg',
-  //     username: 'Kira',
-  //     createdAt: 'hace 2 horas',
-  //     content:
-  //       'Hi everyone, today I was on the most beautiful mountain in the world 😍, I also want to say hi to Silena, Olya and Davis!',
-  //     mediaUrl: ['url_del_media1', 'url_del_media2'],
-  //     liked: false,
-  //     reposted: false,
-  //     likeCount: 10,
-  //     repostCount: 5,
-  //     comments: [
-  //       {
-  //         avatarUrl: '/kobe-bryant.jpg',
-  //         username: 'Usuario2',
-  //         createdAt: 'hace 1 hora',
-  //         content:
-  //           'I chose a wonderful coffe today, I wanted to tell you what product they have in stock - its a latte with coconut 🥥 milk.. delicious... its really incredibly tasty!!! 🤤',
-  //         mediaUrl: [],
-  //         liked: true,
-  //         reposted: false,
-  //         likeCount: 3,
-  //         repostCount: 1,
-  //       },
-  //       // Puedes agregar más comentarios aquí si lo deseas
-  //     ],
-  //   },
-  //   {
-  //     avatarUrl: '/kobe-bryant.jpg',
-  //     username: 'Kobe Bryant',
-  //     createdAt: 'hace 5 horas',
-  //     content:
-  //       'I chose a wonderful coffe today, I wanted to tell you what product they have in stock - its a latte with coconut 🥥 milk.. delicious... its really incredibly tasty!!! 🤤',
-  //     mediaUrl: [],
-  //     liked: true,
-  //     reposted: false,
-  //     likeCount: 20,
-  //     repostCount: 8,
-  //     comments: [
-  //       // Puedes agregar comentarios para este tweet si lo deseas
-  //     ],
-  //   },
-  //   // Puedes agregar más tweets aquí si lo deseas
-  // ]
 
   // RECUPERAR LOS TWEETS DE LA BASE DE DATOS
   useEffect(() => {
@@ -107,13 +21,9 @@ export default function TweetCards() {
           body: JSON.stringify(email),
         })
 
-        console.log('Response following tweets: ', response)
-
         const data: PostResponse[] = await response.json()
 
         setPosts(data)
-
-        console.log('DATA following tweets: ', data)
 
         // Supongamos que tienes el timestamp en formato ISO 8601
         const timestampISO8601: string = '2024-05-03T14:22:13.295Z'
@@ -166,42 +76,63 @@ export default function TweetCards() {
 
   return (
     posts &&
-    posts.map((post) => (
-      <article
-        className="flex flex-col gap-4 rounded-2xl bg-blue-200 p-8"
-        key={post.id}
-      >
-        <header className="flex flex-row items-center justify-between gap-4">
-          <Image
-            className="rounded-full"
-            // TODO: OBTENER URL DE LA RESPUESTA
-            // src={`${post.avatarUrl}`}
-            src={'/pedro-sanchez.jpg'}
-            alt="Avatar del usuario del post"
-            width={45}
-            height={45}
+    posts.map(
+      ({
+        id,
+        userId,
+        username,
+        avatarUrl,
+        commentCount,
+        content,
+        createdAt,
+        likeCount,
+        liked,
+        mediaUrl,
+        repostCount,
+        reposted,
+        comments,
+      }) => (
+        <article
+          className="flex flex-col gap-4 rounded-2xl bg-blue-200 p-8"
+          key={id}
+        >
+          <header className="flex flex-row items-center justify-between gap-4">
+            <Image
+              className="rounded-full"
+              // TODO: OBTENER URL DE LA RESPUESTA
+              src={`${avatarUrl}`}
+              alt="Avatar del usuario del post"
+              width={45}
+              height={45}
+            />
+            <div className="w-full">
+              <h2 className="text-md font-bold">@{username}</h2>
+              {tweetCreatedAt && (
+                <span className="text-sm">{tweetCreatedAt}</span>
+              )}
+            </div>
+
+            {/* TODO: Opciones de los tweets (eliminar, editar o lo que sea...) */}
+            <button className="box-border flex w-8 rounded-full border border-slate-500 p-2 text-black">
+              <EllipsisVerticalIcon />
+            </button>
+          </header>
+
+          <p>{content}</p>
+
+          {/* TODO: Aqui irían las imagenes en caso de que el post tuviese */}
+          {/* <section></section> */}
+
+          <TweetIteractions
+            tweetId={id}
+            liked={liked}
+            reposted={reposted}
+            likesCount={likeCount}
+            commentsCount={commentCount}
+            repostsCount={repostCount}
           />
-          <div className="w-full">
-            {/* TODO: Por ahora => cambiar a post.username */}
-            <h2 className="text-md font-bold">{post.id}</h2>
-            {tweetCreatedAt && (
-              <span className="text-sm">{tweetCreatedAt}</span>
-            )}
-          </div>
-
-          {/* TODO: Opciones de los tweets (eliminar, editar o lo que sea...) */}
-          <button className="box-border flex w-8 rounded-full border border-slate-500 p-2 text-black">
-            <EllipsisVerticalIcon />
-          </button>
-        </header>
-
-        <p>{post.content}</p>
-
-        {/* TODO: Aqui irían las imagenes en caso de que el post tuviese */}
-        {/* <section></section> */}
-
-        <TweetIteractions />
-      </article>
-    ))
+        </article>
+      ),
+    )
   )
 }

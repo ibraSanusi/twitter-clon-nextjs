@@ -19,6 +19,7 @@ model User {
   posts     Post[]
   followers Follow[] @relation("FollowFollower")
   following Follow[] @relation("FollowFollowing")
+  likes     Like[]
 }
 
 model Follow {
@@ -28,19 +29,6 @@ model Follow {
   follower    User     @relation("FollowFollower", fields: [followerId], references: [id])
   followingId String
   following   User     @relation("FollowFollowing", fields: [followingId], references: [id])
-}
-
-model Post {
-  id        String    @id @default(uuid())
-  content   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  userId    String
-  mediaUrl  String[]
-  likes     Like[]
-  comment   Comment[]
-  retweet   Retweet[]
-  user      User      @relation(fields: [userId], references: [id])
 }
 
 model Comment {
@@ -56,10 +44,24 @@ model Comment {
   RetweetComment RetweetComment[]
 }
 
+model Post {
+  id        String    @id @default(uuid())
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  userId    String
+  mediaUrl  String[]
+  likes     Like[]
+  comments  Comment[]
+  retweet   Retweet[]
+  user      User      @relation(fields: [userId], references: [id])
+}
+
 model Like {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   userId    String
+  user      User     @relation(fields: [userId], references: [id])
   postId    String
   post      Post     @relation(fields: [postId], references: [id])
 }

@@ -1,42 +1,104 @@
 import { ArrowPathIcon, HeartIcon } from '@heroicons/react/20/solid'
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/20/solid'
-import { ComponentType } from 'react'
+import clsx from 'clsx'
+import { useSession } from 'next-auth/react'
+import { ComponentType, FormEvent, useState } from 'react'
 
 interface InteractionButtons {
   count: number
   icon: ComponentType
+  liked?: boolean
+  reposted?: boolean
 }
 
-export default function TweetIteractions() {
+interface Props {
+  likesCount: number
+  repostsCount: number
+  commentsCount: number
+  liked: boolean
+  reposted: boolean
+  tweetId: string
+}
+
+export default function TweetIteractions({
+  likesCount,
+  repostsCount,
+  commentsCount,
+  liked,
+  reposted,
+  tweetId,
+}: Props) {
+  const { data: session, status } = useSession()
+  const [like, setLike] = useState(false)
   const interactionButtons: InteractionButtons[] = [
     {
-      count: 489,
+      count: commentsCount,
       icon: ChatBubbleLeftRightIcon,
     },
     {
-      count: 24,
+      count: likesCount,
       icon: HeartIcon,
+      liked,
     },
     {
-      count: 16,
+      count: repostsCount,
       icon: ArrowPathIcon,
+      reposted,
     },
   ]
+  // TODO: CREAR FORMULARIO PARA LIKE, REPOST Y COMMENT
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const postId: string = e.currentTarget.interaction.value
+
+    if (status === 'authenticated' && session?.user) {
+      const likePost = { email: session.user.email, postId }
+      const likeResponse = await fetch('/api/post/like', {
+        method: 'POST',
+        body: JSON.stringify(likePost),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (likeResponse.status === 201) {
+        setLike(true)
+      }
+    }
+  }
   return (
     <section className="flex flex-row gap-2">
       {interactionButtons.map((interaction) => {
         const ButtonIcon: ComponentType = interaction.icon
 
         return (
-          <button
-            key={interaction.count}
-            className=" text-slate-600 flex flex-row items-center gap-1"
-          >
-            <div className="size-4">
-              <ButtonIcon />
-            </div>
-            <span className="text-sm">{interaction.count}</span>
-          </button>
+          <>
+            <form key={tweetId} onSubmit={handleSubmit}>
+              <input
+                type="text"
+                className="hidden"
+                value={tweetId}
+                id="interaction"
+              />
+              <button
+                key={interaction.count}
+                className={clsx(
+                  'flex flex-row items-center gap-1 hover:text-red-500',
+                  {
+                    'text-red-500': interaction?.liked || interaction?.reposted,
+                    'text-slate-600':
+                      !interaction?.liked && !interaction?.reposted,
+                  },
+                )}
+              >
+                <div className="size-4">
+                  <ButtonIcon />
+                </div>
+                <span className="text-sm">{interaction.count}</span>
+              </button>
+            </form>
+          </>
         )
       })}
     </section>
