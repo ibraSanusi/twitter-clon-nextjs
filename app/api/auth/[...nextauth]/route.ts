@@ -20,15 +20,11 @@ const authOptions = {
         },
       },
       async authorize(credentials, req) {
-        console.log(credentials)
-
         const userFound = await db.user.findUnique({
           where: {
             email: credentials?.email,
           },
         })
-
-        console.log(userFound)
 
         if (!credentials?.password || !userFound?.password) {
           return null
