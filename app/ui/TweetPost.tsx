@@ -35,8 +35,6 @@ export default function TweetPost() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    setValue('')
-
     // 1. Comprobar si el usuario está logeado
     if (status === 'authenticated' && session?.user) {
       // 2. Recuperar el email
@@ -61,6 +59,12 @@ export default function TweetPost() {
         method: 'POST',
         body: JSON.stringify(postData),
       })
+
+      if (res.status !== 201) {
+        return
+      }
+
+      setValue('')
 
       // 5. Con la respuesta de la API confirmar si se ha subido
       const data: {
