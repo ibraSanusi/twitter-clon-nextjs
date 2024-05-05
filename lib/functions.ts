@@ -6,49 +6,51 @@ export async function getCommentsForPost(
 ): Promise<CommentFormatted[] | undefined> {
   const comments = await db.comment.findMany({
     where: {
-      userId: id,
+      author: id,
     },
   })
 
   const commentsReformatted: CommentFormatted[] | undefined = []
-  comments.map(async ({ userId, content, createdAt, id, postId, mediaUrl }) => {
-    const user = await db.user.findUnique({
-      where: {
-        id: userId,
-      },
-      select: {
-        avatarUrl: true,
-        username: true,
-      },
-    })
+  comments.map(
+    async ({ author, content, createdAt, id, tweetId, mediaUrls }) => {
+      const user = await db.user.findUnique({
+        where: {
+          id: author,
+        },
+        select: {
+          avatarUrl: true,
+          username: true,
+        },
+      })
 
-    if (!user) {
-      return undefined
-    }
+      if (!user) {
+        return undefined
+      }
 
-    const liked = await checkIfPostLiked(id, userId)
-    const reposted = await checkIfPostReposted(id, userId)
+      const liked = await checkIfPostLiked(id, author)
+      const reposted = await checkIfPostReposted(id, author)
 
-    const likeCount = await countLikesForPost(id)
-    // const commentCount = comments.length
-    const retweets = await getRetweetsForPost(id)
+      const likeCount = await countLikesForPost(id)
+      // const commentCount = comments.length
+      const retweets = await getRetweetsForPost(id)
 
-    const repostCount = retweets?.length ?? 0
+      const repostCount = retweets?.length ?? 0
 
-    const commentReformatted: CommentFormatted = {
-      postId,
-      avatarUrl: user.avatarUrl ?? '/default-avatar.jpg',
-      username: user.username,
-      createdAt,
-      content,
-      mediaUrl,
-      liked,
-      reposted,
-      likeCount,
-      repostCount,
-    }
-    commentsReformatted.push(commentReformatted)
-  })
+      const commentReformatted: CommentFormatted = {
+        tweetId,
+        avatarUrl: user.avatarUrl ?? '/default-avatar.jpg',
+        username: user.username,
+        createdAt,
+        content,
+        mediaUrls,
+        liked,
+        reposted,
+        likeCount,
+        repostCount,
+      }
+      commentsReformatted.push(commentReformatted)
+    },
+  )
 
   return commentsReformatted
 }
@@ -56,9 +58,9 @@ export async function getCommentsForPost(
 export async function getRetweetsForPost(
   id: string,
 ): Promise<RetweetsFormatted[] | undefined> {
-  const retweets = await db.post.findMany({
+  const retweets = await db.tweet.findMany({
     where: {
-      userId: id,
+      author: id,
     },
   })
 
@@ -67,10 +69,10 @@ export async function getRetweetsForPost(
   }
 
   let retweetsFormatted: RetweetsFormatted[] | undefined = []
-  retweets.map(async ({ id, userId, content, createdAt, mediaUrl }) => {
+  retweets.map(async ({ id, author, content, createdAt, mediaUrls }) => {
     const user = await db.user.findUnique({
       where: {
-        id: userId,
+        id: author,
       },
     })
 
@@ -78,8 +80,8 @@ export async function getRetweetsForPost(
       return
     }
 
-    const liked = await checkIfPostLiked(id, userId)
-    const reposted = await checkIfPostReposted(id, userId)
+    const liked = await checkIfPostLiked(id, author)
+    const reposted = await checkIfPostReposted(id, author)
 
     const likeCount = await countLikesForPost(id)
     const repostCount = retweets.length
@@ -89,7 +91,7 @@ export async function getRetweetsForPost(
       username: user.username,
       createdAt,
       content,
-      mediaUrl,
+      mediaUrls,
       liked,
       reposted,
       likeCount,
@@ -106,7 +108,7 @@ export async function getRetweetsForPost(
 }
 
 export async function checkIfPostLiked(
-  postId: string,
+  tweetId: string,
   userId: string,
 ): Promise<boolean> {
   // 1. Comprobar si el post esta en LIKE y si el usuario en sesion le ha dado like
@@ -114,7 +116,7 @@ export async function checkIfPostLiked(
     where: {
       userId,
       AND: {
-        postId,
+        tweetId,
       },
     },
   })
@@ -123,13 +125,13 @@ export async function checkIfPostLiked(
 }
 
 export async function checkIfPostReposted(
-  postId: string,
+  tweetId: string,
   userId: string,
 ): Promise<boolean> {
   // 1. Comprobar si el post esta en LIKE y si el usuario en sesion le ha dado like
   const retweet = await db.retweet.findFirst({
     where: {
-      postId,
+      tweetId,
       AND: {
         userId,
       },
@@ -143,7 +145,7 @@ export async function countLikesForPost(id: string): Promise<number> {
   // Obtener de la tabla like los likes del tweet (id)
   const like = await db.like.findMany({
     where: {
-      postId: id,
+      tweetId: id,
     },
   })
 

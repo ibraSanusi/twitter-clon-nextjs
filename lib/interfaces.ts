@@ -5,12 +5,12 @@ export interface ResponseData {
 }
 
 export interface CommentFormatted {
-  postId: string
+  tweetId: string
   avatarUrl: string
   username: string
   createdAt: Date
   content: string
-  mediaUrl: string[]
+  mediaUrls: string[]
   liked: boolean
   reposted: boolean
   likeCount: number
@@ -22,19 +22,19 @@ export interface RetweetsFormatted {
   username: string
   createdAt: Date
   content: string
-  mediaUrl: string[]
+  mediaUrls: string[]
   liked: boolean
   reposted: boolean
   likeCount: number
   repostCount: number
 }
 
-export interface PostResponse {
+export interface TweetResponse {
   id: string
-  userId: string
+  author: string
   avatarUrl: string
   username: string
-  createdAt: Date
+  createdAt: string
   content: string
   mediaUrl: string[]
   liked: boolean
