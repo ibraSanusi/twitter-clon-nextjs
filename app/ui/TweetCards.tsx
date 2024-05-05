@@ -3,12 +3,11 @@ import TweetIteractions from './TweetIteractions'
 import { EllipsisVerticalIcon } from '@heroicons/react/16/solid'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
-import { PostResponse } from '@/lib/interfaces'
+import { TweetResponse } from '@/lib/interfaces'
 
 export default function TweetCards() {
   const { data: session, status } = useSession()
-  const [tweetCreatedAt, setTweetCreatedAt] = useState<string>()
-  const [posts, setPosts] = useState<PostResponse[]>()
+  const [tweets, setTweets] = useState<TweetResponse[]>()
 
   // RECUPERAR LOS TWEETS DE LA BASE DE DATOS
   useEffect(() => {
@@ -21,52 +20,13 @@ export default function TweetCards() {
           body: JSON.stringify(email),
         })
 
-        const data: PostResponse[] = await response.json()
-
-        setPosts(data)
-
-        // Supongamos que tienes el timestamp en formato ISO 8601
-        const timestampISO8601: string = '2024-05-03T14:22:13.295Z'
-
-        // Convertir el timestamp a un objeto Date
-        const publicationDate: Date = new Date(timestampISO8601)
-
-        // Obtener la fecha y hora actual
-        const now: Date = new Date()
-
-        // Calcular la diferencia en milisegundos
-        const timeDifferenceMs: number =
-          now.getTime() - publicationDate.getTime()
-
-        // Convertir la diferencia de milisegundos a segundos, minutos, horas, días, meses y años
-        const seconds: number = Math.floor(timeDifferenceMs / 1000)
-        const minutes: number = Math.floor(seconds / 60)
-        const hours: number = Math.floor(minutes / 60)
-        const days: number = Math.floor(hours / 24)
-        const months: number = Math.floor(days / 30)
-        const years: number = Math.floor(months / 12)
-
-        // Crear un mensaje para mostrar la diferencia de tiempo
-        // TODO: ADAPTAR EL MENSAJE PARA PONERLO EN EL TWEET
-        if (years > 0) {
-          const message = `${years} año${years > 1 ? 's' : ''}, `
-          setTweetCreatedAt(message)
-        } else if (months > 0) {
-          const message = `${months} mes${months > 1 ? 'es' : ''}, `
-          setTweetCreatedAt(message)
-        } else if (days > 0) {
-          const message = `${days} día${days > 1 ? 's' : ''}, `
-          setTweetCreatedAt(message)
-        } else if (hours > 0) {
-          const message = `${hours} hora${hours > 1 ? 's' : ''}, `
-          setTweetCreatedAt(message)
-        } else if (minutes > 0) {
-          const message = `${minutes} minuto${minutes > 1 ? 's' : ''}, `
-          setTweetCreatedAt(message)
-        } else if (seconds > 0) {
-          const message = `${seconds} segundo${seconds > 1 ? 's' : ''}`
-          setTweetCreatedAt(message)
+        if (response.status !== 200) {
+          return
         }
+
+        const data: TweetResponse[] = await response.json()
+
+        setTweets(data)
 
         // console.log(`El post fue publicado hace ${tweetCreatedAt}`)
       }
@@ -74,12 +34,49 @@ export default function TweetCards() {
     fetchData()
   }, [status, session?.user])
 
+  const getPublishDateFormatted = (timestampISO8601: string) => {
+    // Supongamos que tienes el timestamp en formato ISO 8601
+
+    // Convertir el timestamp a un objeto Date
+    const publicationDate: Date = new Date(timestampISO8601)
+
+    // Obtener la fecha y hora actual
+    const now: Date = new Date()
+
+    // Calcular la diferencia en milisegundos
+    const timeDifferenceMs: number = now.getTime() - publicationDate.getTime()
+
+    // Convertir la diferencia de milisegundos a segundos, minutos, horas, días, meses y años
+    const seconds: number = Math.floor(timeDifferenceMs / 1000)
+    const minutes: number = Math.floor(seconds / 60)
+    const hours: number = Math.floor(minutes / 60)
+    const days: number = Math.floor(hours / 24)
+    const months: number = Math.floor(days / 30)
+    const years: number = Math.floor(months / 12)
+
+    // Crear un mensaje para mostrar la diferencia de tiempo
+    // TODO: ADAPTAR EL MENSAJE PARA PONERLO EN EL TWEET
+    if (years > 0) {
+      return `${years} año${years > 1 ? 's' : ''}, `
+    } else if (months > 0) {
+      return `${months} mes${months > 1 ? 'es' : ''}, `
+    } else if (days > 0) {
+      return `${days} día${days > 1 ? 's' : ''}, `
+    } else if (hours > 0) {
+      return `${hours} hora${hours > 1 ? 's' : ''}, `
+    } else if (minutes > 0) {
+      return `${minutes} minuto${minutes > 1 ? 's' : ''}, `
+    } else if (seconds > 0) {
+      return `${seconds} segundo${seconds > 1 ? 's' : ''}`
+    }
+  }
+
   return (
-    posts &&
-    posts.map(
+    tweets &&
+    tweets.map(
       ({
         id,
-        userId,
+        author,
         username,
         avatarUrl,
         commentCount,
@@ -107,9 +104,11 @@ export default function TweetCards() {
             />
             <div className="w-full">
               <h2 className="text-md font-bold">@{username}</h2>
-              {tweetCreatedAt && (
-                <span className="text-sm">{tweetCreatedAt}</span>
-              )}
+              {
+                <span className="text-sm">
+                  {getPublishDateFormatted(createdAt)}
+                </span>
+              }
             </div>
 
             {/* TODO: Opciones de los tweets (eliminar, editar o lo que sea...) */}
