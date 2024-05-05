@@ -1,14 +1,6 @@
 import db from '@/services/db'
 import { NextRequest } from 'next/server'
 
-interface TweetInterface {
-  id: string
-  content: string
-  createdAt: Date
-  updatedAt: Date
-  userId: string
-}
-
 export async function POST(request: NextRequest): Promise<Response> {
   try {
     // console.log('Request: ', request)
@@ -16,24 +8,26 @@ export async function POST(request: NextRequest): Promise<Response> {
     // TODO: SOLUCIONAR LA FECHA DE PUBLICACION ES INCORRECTA
     const body: { email: string; content: string } = await request.json()
 
-    const userEmail = body?.email ?? body.email
+    const userEmail = body?.email
     if (!userEmail) {
       return new Response('El correo electrónico del usuario es requerido', {
         status: 400,
       })
     }
 
-    const user = await db.user.findUnique({
+    const userInSession = await db.user.findUnique({
       where: {
         email: userEmail,
       },
     })
 
-    if (!user) {
+    console.log('userInSession: ', JSON.stringify(userInSession))
+
+    if (!userInSession) {
       return new Response('Usuario no encontrado', { status: 404 })
     }
 
-    const author = user.id
+    const author = userInSession.id
 
     const content = body?.content
     if (!content) {
@@ -48,6 +42,8 @@ export async function POST(request: NextRequest): Promise<Response> {
         content,
       },
     })
+
+    console.log('newTweet: ', JSON.stringify(newTweet))
 
     return new Response(JSON.stringify(newTweet), { status: 201 })
   } catch (error) {
