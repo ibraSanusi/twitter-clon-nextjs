@@ -33,7 +33,7 @@ export async function POST(request: NextRequest): Promise<Response> {
       return new Response('Usuario no encontrado', { status: 404 })
     }
 
-    const userId = user.id
+    const author = user.id
 
     const content = body?.content
     if (!content) {
@@ -42,9 +42,9 @@ export async function POST(request: NextRequest): Promise<Response> {
       })
     }
 
-    const newTweet = await db.post.create({
+    const newTweet = await db.tweet.create({
       data: {
-        userId,
+        author,
         content,
       },
     })

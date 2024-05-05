@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    const body: { email: string; postId: string } = await request.json()
+    const body: { email: string; tweetId: string } = await request.json()
 
     const userEmail = body?.email
     if (!userEmail) {
@@ -24,8 +24,8 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     const userId = user.id
 
-    const postId = body?.postId
-    if (!postId) {
+    const tweetId = body?.tweetId
+    if (!tweetId) {
       return new Response('El id del post es requerido.', {
         status: 400,
       })
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     const newLike = await db.like.create({
       data: {
         userId,
-        postId,
+        tweetId,
       },
     })
 

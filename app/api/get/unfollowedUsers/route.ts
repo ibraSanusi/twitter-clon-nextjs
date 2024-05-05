@@ -1,14 +1,6 @@
 import db from '@/services/db'
 import { NextRequest } from 'next/server'
 
-interface TweetInterface {
-  id: string
-  content: string
-  createdAt: Date
-  updatedAt: Date
-  userId: string
-}
-
 /**
  * Consigue los usuarios a los que no sigue el usuario en sesion
  * @param request
@@ -42,7 +34,7 @@ export async function POST(request: NextRequest): Promise<Response> {
     const unfollowedUsers = await db.user.findMany({
       where: {
         NOT: {
-          following: {
+          followings: {
             some: {
               followerId: user.id,
             },

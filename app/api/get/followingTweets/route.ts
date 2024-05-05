@@ -42,14 +42,14 @@ export async function POST(request: NextRequest): Promise<Response> {
 
   const userIds = follows.map((follow) => follow.followingId)
 
-  const followingUsersLastTweets = await db.post.findMany({
+  const followingUsersLastTweets = await db.tweet.findMany({
     where: {
-      userId: {
+      author: {
         in: userIds,
       },
     },
     orderBy: {
-      updatedAt: 'desc',
+      createdAt: 'desc',
     },
     take: userIds.length,
   })
@@ -63,10 +63,10 @@ export async function POST(request: NextRequest): Promise<Response> {
 
   const followingTweetsFormatted = await Promise.all(
     followingUsersLastTweets.map(
-      async ({ id, userId, content, createdAt, mediaUrl }) => {
+      async ({ id, author, content, createdAt, mediaUrls }) => {
         const user = await db.user.findUnique({
           where: {
-            id: userId,
+            id: author,
           },
           select: {
             avatarUrl: true,
@@ -92,12 +92,12 @@ export async function POST(request: NextRequest): Promise<Response> {
 
         return {
           id,
-          userId,
-          avatarUrl: user.avatarUrl ?? '/default-avatar.jpg',
+          author,
+          avatarUrl: user.avatarUrl,
           username: user.username ?? 'Unknown',
           createdAt,
           content,
-          mediaUrl,
+          mediaUrls,
           liked,
           reposted,
           likeCount,
