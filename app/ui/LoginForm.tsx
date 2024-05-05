@@ -52,16 +52,14 @@ export default function LoginForm() {
       if (res?.status === LoginStatus.Success) {
         route.push('/home')
       }
-
-      console.log('Response signIn: ', res)
     }
   }
 
   return (
-    <form className="flex flex-col gap-8 w-full h-full" onSubmit={handleSubmit}>
+    <form className="flex h-full w-full flex-col gap-8" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-4">
         <input
-          className="bg-input p-4 rounded-md placeholder:text-placeholder focus:outline-none"
+          className="rounded-md bg-input p-4 placeholder:text-placeholder focus:outline-none"
           type="text"
           placeholder="Escribe email o username"
           name="email"
@@ -73,7 +71,7 @@ export default function LoginForm() {
         {response && <small className="text-red-600">{response}</small>}
       </div>
       <div className="flex flex-col gap-4">
-        <div className="flex flex-row justify-between items-center bg-input p-4 rounded-md">
+        <div className="flex flex-row items-center justify-between rounded-md bg-input p-4">
           <input
             className="bg-transparent placeholder:text-placeholder focus:outline-none"
             type={passwordVisibility ? 'text' : 'password'}
@@ -89,11 +87,11 @@ export default function LoginForm() {
             {passwordVisibility ? <EyeIcon /> : <EyeSlashIcon />}
           </button>
         </div>
-        <Link href={'#'} className="w-full flex justify-end text-slate-400">
+        <Link href={'#'} className="flex w-full justify-end text-slate-400">
           Olvidé mi contraseña
         </Link>
       </div>
-      <button className="bg-button p-4 rounded-md text-white" type="submit">
+      <button className="rounded-md bg-button p-4 text-white" type="submit">
         Iniciar sesión
       </button>
     </form>
