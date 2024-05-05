@@ -1,17 +1,8 @@
 import db from '@/services/db'
 import { NextRequest } from 'next/server'
 
-interface TweetInterface {
-  id: string
-  content: string
-  createdAt: Date
-  updatedAt: Date
-  userId: string
-}
-
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    console.log('Request: ', request)
     const body: { email: string } = await request.json()
 
     const userEmail = body?.email ?? body.email
