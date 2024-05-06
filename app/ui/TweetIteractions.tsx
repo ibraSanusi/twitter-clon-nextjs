@@ -1,7 +1,6 @@
 import { ArrowPathIcon, HeartIcon } from '@heroicons/react/20/solid'
 import { ChatBubbleLeftRightIcon } from '@heroicons/react/20/solid'
 import clsx from 'clsx'
-import { useSession } from 'next-auth/react'
 import { ComponentType, FormEvent, useState } from 'react'
 
 interface InteractionButtons {
@@ -28,7 +27,6 @@ export default function TweetIteractions({
   reposted,
   tweetId,
 }: Props) {
-  const { data: session, status } = useSession()
   const [like, setLike] = useState(false)
   const interactionButtons: InteractionButtons[] = [
     {
@@ -52,19 +50,17 @@ export default function TweetIteractions({
 
     const postId: string = e.currentTarget.interaction.value
 
-    if (status === 'authenticated' && session?.user) {
-      const likePost = { email: session.user.email, postId }
-      const likeResponse = await fetch('/api/post/like', {
-        method: 'POST',
-        body: JSON.stringify(likePost),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+    const likePost = { postId }
+    const likeResponse = await fetch('/api/post/like', {
+      method: 'POST',
+      body: JSON.stringify(likePost),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
 
-      if (likeResponse.status === 201) {
-        setLike(true)
-      }
+    if (likeResponse.status === 201) {
+      setLike(true)
     }
   }
   return (

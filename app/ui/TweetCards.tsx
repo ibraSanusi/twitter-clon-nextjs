@@ -1,38 +1,31 @@
 import Image from 'next/image'
 import TweetIteractions from './TweetIteractions'
 import { EllipsisVerticalIcon } from '@heroicons/react/16/solid'
-import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { TweetResponse } from '@/lib/interfaces'
 
 export default function TweetCards() {
-  const { data: session, status } = useSession()
   const [tweets, setTweets] = useState<TweetResponse[]>()
 
   // RECUPERAR LOS TWEETS DE LA BASE DE DATOS
   useEffect(() => {
     async function fetchData() {
-      if (status === 'authenticated' && session?.user) {
-        // 2. Recuperar el email
-        const email = { email: session.user.email }
-        const response = await fetch('/api/get/followingTweets', {
-          method: 'POST',
-          body: JSON.stringify(email),
-        })
+      const response = await fetch('/api/get/followingTweets', {
+        method: 'GET',
+      })
 
-        if (response.status !== 200) {
-          return
-        }
-
-        const data: TweetResponse[] = await response.json()
-
-        setTweets(data)
-
-        // console.log(`El post fue publicado hace ${tweetCreatedAt}`)
+      if (response.status !== 200) {
+        return
       }
+
+      const data: TweetResponse[] = await response.json()
+
+      setTweets(data)
+
+      // console.log(`El post fue publicado hace ${tweetCreatedAt}`)
     }
     fetchData()
-  }, [status, session?.user])
+  }, [])
 
   const getPublishDateFormatted = (timestampISO8601: string) => {
     // Supongamos que tienes el timestamp en formato ISO 8601

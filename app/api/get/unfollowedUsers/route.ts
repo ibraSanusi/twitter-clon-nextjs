@@ -1,19 +1,44 @@
 import db from '@/services/db'
 import { NextRequest } from 'next/server'
+import { decode } from 'next-auth/jwt'
 
 /**
  * Consigue los usuarios a los que no sigue el usuario en sesion
  * @param request
  * @returns
  */
-
 // TODO: CAMBIAR EL POST POR EL GET Y RECUPERAR LA SESION DEL USUARIO DEL HEADER
-export async function POST(request: NextRequest): Promise<Response> {
+export async function GET(request: NextRequest): Promise<Response> {
   try {
-    // console.log('Request: ', request)
-    const body: { email: string } = await request.json()
+    // Obtener el token JWT de la cookie
+    const token = request.cookies.get('next-auth.session-token')?.value
 
-    const userEmail = body?.email ?? body.email
+    if (!token) {
+      return new Response('No se encontró el token de sesión', { status: 401 })
+    }
+
+    const secret = process.env.NEXTAUTH_SECRET
+    if (!secret) {
+      return new Response('No se encontró el secreto.', { status: 401 })
+    }
+
+    // Decodificar el token JWT para obtener los detalles de la sesión
+    const decodedToken = await decode({
+      token: token,
+      secret: secret,
+    })
+
+    if (!decodedToken) {
+      return new Response('Token de sesión inválido', { status: 401 })
+    }
+
+    // TODO: Verificar si el token ha expirado
+    // if (decodedToken.exp && Date.now() >= decodedToken.exp * 1000) {
+    //   return new Response('La sesión ha expirado', { status: 401 })
+    // }
+
+    // Obtener el correo electrónico del usuario de la sesión
+    const userEmail = decodedToken.email
     if (!userEmail) {
       return new Response('El correo electrónico del usuario es requerido', {
         status: 400,

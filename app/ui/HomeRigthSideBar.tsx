@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import React, { FormEvent, useEffect, useState } from 'react'
 
@@ -15,7 +14,6 @@ interface UserData {
 }
 
 export default function HomeRightSideBar({ className }: Props) {
-  const { data: session, status } = useSession()
   const [unfollowedUsers, setUnfollowedUsers] = useState<UserData[]>([])
 
   // Seguir al usuario
@@ -26,43 +24,35 @@ export default function HomeRightSideBar({ className }: Props) {
     console.log('Siguiendo a... => ', followingId)
 
     // Seguir al usuario
-    if (status === 'authenticated' && session?.user) {
-      // 2. Recuperar el email
-      const postData = { email: session.user.email, followingId }
+    // 2. Recuperar el email
+    const postData = { followingId }
 
-      const response = await fetch('/api/post/follow', {
-        method: 'POST',
-        body: JSON.stringify(postData),
-      })
+    const response = await fetch('/api/post/follow', {
+      method: 'POST',
+      body: JSON.stringify(postData),
+    })
 
-      const data: UserData[] = await response.json()
+    const data: UserData[] = await response.json()
 
-      console.log('DATA follow: ', data)
+    console.log('DATA follow: ', data)
 
-      //TODO: Setear follow a true para cambiar el boton de seguir a seguido
-    }
+    //TODO: Setear follow a true para cambiar el boton de seguir a seguido
   }
 
   useEffect(() => {
     async function fetchData() {
-      if (status === 'authenticated' && session?.user) {
-        // 2. Recuperar el email
-        const email = { email: session.user.email }
-        // Puedes esperar aquí
-        const response = await fetch('/api/get/unfollowedUsers', {
-          method: 'POST',
-          body: JSON.stringify(email),
-        })
+      const response = await fetch('/api/get/unfollowedUsers', {
+        method: 'GET',
+      })
 
-        const data: UserData[] = await response.json()
+      const data: UserData[] = await response.json()
 
-        console.log('DATA unfollowed users: ', data)
+      console.log('DATA unfollowed users: ', data)
 
-        setUnfollowedUsers(data)
-      }
+      setUnfollowedUsers(data)
     }
     fetchData()
-  }, [status, session?.user])
+  }, [])
 
   // TODO: Recuperar todos los usuarios a los que sigue el usuario en sesión
   // TODO: RECUPERAR LA IMAGEN DE LA BASE DE DATOS (url)

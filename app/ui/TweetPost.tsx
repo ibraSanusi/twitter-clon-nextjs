@@ -5,7 +5,6 @@ import Image from 'next/image'
 import Multimedia from '@/app/ui/Multimedia'
 import { ChangeEvent, FormEvent, useRef, useState } from 'react'
 import { useAutosizeTextArea } from '@/lib/UseAutosizeTextArea'
-import { useSession } from 'next-auth/react'
 import SuccessIcon from '@/app/ui/icons/SuccessIcon'
 import CloseIcon from '@/app/ui/icons/CloseIcon'
 import ErrorIcon from '@/app/ui/icons/ErrorIcon'
@@ -16,9 +15,7 @@ const SUCCESS_MESSAGE = 'Tweet subido correctamente.'
 export default function TweetPost() {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [value, setValue] = useState('')
-  const { data: session, status } = useSession()
   const [error, setError] = useState(false)
-  const [postSuccessMessage, setPostSuccessMessage] = useState('')
   const [toastVisibility, setToastVisibility] = useState(true)
 
   useAutosizeTextArea(textareaRef.current, value)
@@ -35,55 +32,45 @@ export default function TweetPost() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    // 1. Comprobar si el usuario está logeado
-    if (status === 'authenticated' && session?.user) {
-      // 2. Recuperar el email
-      const userSession = session.user
-      const email = userSession?.email
+    // 3. Recuperar el contenido del textarea
+    const content = value
 
-      // 3. Recuperar el contenido del textarea
-      const content = value
-
-      if (!email || !content) {
-        return
-      }
-
-      const postData: { email: string; content: string } = {
-        email: email,
-        content: content,
-      }
-
-      // 4. Llamar a la API para postear el tweet con el email
-      // TODO: mejorar el tipado del response
-      const res = await fetch('/api/post/tweet', {
-        method: 'POST',
-        body: JSON.stringify(postData),
-      })
-
-      if (res.status !== 201) {
-        return
-      }
-
-      setValue('')
-
-      // 5. Con la respuesta de la API confirmar si se ha subido
-      const data: {
-        id: string
-        content: string
-        createdAt: Date
-        updatedAt: Date
-        userId: string
-      } = await res.json()
-
-      console.log('Respuesta del servidor: ', data.content)
-
-      // 6. Setear el error o no...
-      if (!res.ok) {
-        setError(true)
-        return
-      }
-      setError(false)
+    if (!content) {
+      return
     }
+
+    const postData: { content: string } = {
+      content: content,
+    }
+
+    // 4. Llamar a la API para postear el tweet con el email
+    // TODO: mejorar el tipado del response
+    const res = await fetch('/api/post/tweet', {
+      method: 'POST',
+      body: JSON.stringify(postData),
+    })
+
+    if (res.status !== 201) {
+      return
+    }
+
+    setValue('')
+
+    // 5. Con la respuesta de la API confirmar si se ha subido
+    const data: {
+      id: string
+      content: string
+      createdAt: Date
+      updatedAt: Date
+      userId: string
+    } = await res.json()
+
+    // 6. Setear el error o no...
+    if (!res.ok) {
+      setError(true)
+      return
+    }
+    setError(false)
   }
 
   // TODO: anadir funcionalidad de subir imagenes y demas archivos
