@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import React, { FormEvent, useEffect, useState } from 'react'
+import React, { FormEvent, MouseEventHandler, useEffect, useState } from 'react'
 
 interface Props {
   className: string
@@ -17,9 +17,9 @@ export default function HomeRightSideBar({ className }: Props) {
   const [unfollowedUsers, setUnfollowedUsers] = useState<UserData[]>([])
 
   // Seguir al usuario
-  const handleFollow = async (e: FormEvent<HTMLFormElement>) => {
+  const handleFollow: MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
-    const followingId: string = e.currentTarget.userId.value
+    const followingId: string = e.currentTarget.id
 
     console.log('Siguiendo a... => ', followingId)
 
@@ -27,16 +27,42 @@ export default function HomeRightSideBar({ className }: Props) {
     // 2. Recuperar el email
     const postData = { followingId }
 
-    const response = await fetch('/api/post/follow', {
-      method: 'POST',
-      body: JSON.stringify(postData),
-    })
+    // Si se ha seguido correctamente al usuario
+    console.log('e.currentTarget: ', e.currentTarget)
+    const buttonValue = e.currentTarget
+    switch (buttonValue.innerHTML) {
+      case 'Seguir':
+        const followResponse = await fetch('/api/post/follow', {
+          method: 'POST',
+          body: JSON.stringify(postData),
+        })
 
-    const data: UserData[] = await response.json()
+        if (!followResponse.ok) {
+          return
+        }
 
-    console.log('DATA follow: ', data)
+        buttonValue.innerHTML = 'Seguido'
+        const data: UserData[] = await followResponse.json()
 
-    //TODO: Setear follow a true para cambiar el boton de seguir a seguido
+        break
+      case 'Seguido':
+        // TODO: manejar el unfollow del usuario cuando se le de click
+        const unfollowResponse = await fetch('/api/post/unfollow', {
+          method: 'POST',
+          body: JSON.stringify(postData),
+        })
+
+        if (!unfollowResponse.ok) {
+          return
+        }
+
+        buttonValue.innerHTML = 'Seguir'
+        break
+      default:
+        break
+    }
+
+    // console.log('DATA follow: ', data)
   }
 
   useEffect(() => {
@@ -54,6 +80,8 @@ export default function HomeRightSideBar({ className }: Props) {
     fetchData()
   }, [])
 
+  const handleClick: MouseEventHandler<HTMLButtonElement> = (e) => {}
+
   // TODO: Recuperar todos los usuarios a los que sigue el usuario en sesión
   // TODO: RECUPERAR LA IMAGEN DE LA BASE DE DATOS (url)
 
@@ -70,10 +98,7 @@ export default function HomeRightSideBar({ className }: Props) {
               width={45}
               height={45}
             />
-            <form
-              onSubmit={handleFollow}
-              className="flex w-full flex-row justify-between"
-            >
+            <section className="flex w-full flex-row justify-between">
               <input
                 className="hidden"
                 name="userId"
@@ -89,12 +114,14 @@ export default function HomeRightSideBar({ className }: Props) {
                 </span>
               </div>
               <button
+                id={user.id}
+                onClick={handleFollow}
                 className="rounded-xl bg-orange-200 px-4 py-2"
                 type="submit"
               >
                 Seguir
               </button>
-            </form>
+            </section>
           </article>
         ))}
       </section>

@@ -7,7 +7,6 @@ import { decode } from 'next-auth/jwt'
  * @param request
  * @returns
  */
-// TODO: CAMBIAR EL POST POR EL GET Y RECUPERAR LA SESION DEL USUARIO DEL HEADER
 export async function GET(request: NextRequest): Promise<Response> {
   try {
     // Obtener el token JWT de la cookie
@@ -73,7 +72,34 @@ export async function GET(request: NextRequest): Promise<Response> {
       },
     })
 
-    return new Response(JSON.stringify(unfollowedUsers), { status: 201 })
+    // Obtener todos los seguidores de cada usuario (unfollowedUsers)
+    const formattedUnfollowedUsers = await Promise.all(
+      unfollowedUsers.map(
+        async ({ id, username, fullname, avatarUrl, email, role }) => {
+          const followersCount = await db.follow.count({
+            where: {
+              followingId: id,
+            },
+          })
+
+          // Formatear la respuesta
+          return {
+            id,
+            username,
+            fullname,
+            avatarUrl,
+            email,
+            role,
+            followed: false,
+            followersCount,
+          }
+        },
+      ),
+    )
+
+    return new Response(JSON.stringify(formattedUnfollowedUsers), {
+      status: 201,
+    })
   } catch (error) {
     console.error('Error al procesar la solicitud:', error)
     return new Response('Error interno del servidor', { status: 500 })

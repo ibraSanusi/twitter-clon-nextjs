@@ -4,8 +4,7 @@ import { NextRequest } from 'next/server'
 
 export async function POST(request: NextRequest): Promise<Response> {
   try {
-    // console.log('Request: ', request)
-    const body: { content: string } = await request.json()
+    const body: { followingId: string } = await request.json()
 
     // Obtener el token JWT de la cookie
     const token = request.cookies.get('next-auth.session-token')?.value
@@ -42,37 +41,41 @@ export async function POST(request: NextRequest): Promise<Response> {
       })
     }
 
-    const userInSession = await db.user.findUnique({
+    const followingId = body?.followingId ?? body.followingId
+    if (!followingId) {
+      return new Response(
+        'El id del usuario al que se quiere seguir es requerido.',
+        {
+          status: 400,
+        },
+      )
+    }
+
+    const user = await db.user.findUnique({
       where: {
         email: userEmail,
       },
     })
 
-    console.log('userInSession: ', JSON.stringify(userInSession))
-
-    if (!userInSession) {
+    if (!user) {
       return new Response('Usuario no encontrado', { status: 404 })
     }
 
-    const author = userInSession.id
+    const followerId = user.id
 
-    const content = body?.content
-    if (!content) {
-      return new Response('El contenido del tweet es requerido', {
-        status: 400,
-      })
-    }
-
-    const newTweet = await db.tweet.create({
-      data: {
-        author,
-        content,
+    // Eliminar la relacion de seguimiento
+    const followDeleted = await db.follow.delete({
+      where: {
+        followerId_followingId: {
+          followerId,
+          followingId,
+        },
       },
     })
 
-    console.log('newTweet: ', JSON.stringify(newTweet))
+    console.log('followDeleted: ', followDeleted)
 
-    return new Response(JSON.stringify(newTweet), { status: 201 })
+    return new Response(JSON.stringify(followDeleted), { status: 201 })
   } catch (error) {
     console.error('Error al procesar la solicitud:', error)
     return new Response('Error interno del servidor', { status: 500 })
