@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { exo2 } from './ui/fonts'
+import Header from '@/app/ui/Header'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,8 +16,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // TODO: PORVEER A TODA LA APLICACION DE LA SESSION
   return (
     <html lang="en">
+      <Header />
       <body className={`${exo2.className} antialiased`}>{children}</body>
     </html>
   )
