@@ -32,7 +32,7 @@ export async function getCommentsForPost(
 
       const likeCount = await countLikesForPost(id)
       // const commentCount = comments.length
-      const retweets = await getRetweetsForPost(id)
+      const retweets = await getPostRetweets(id)
 
       const repostCount = retweets?.length ?? 0
 
@@ -55,12 +55,12 @@ export async function getCommentsForPost(
   return commentsReformatted
 }
 
-export async function getRetweetsForPost(
-  id: string,
+export async function getPostRetweets(
+  tweetId: string,
 ): Promise<RetweetsFormatted[] | undefined> {
-  const retweets = await db.tweet.findMany({
+  const retweets = await db.retweet.findMany({
     where: {
-      author: id,
+      tweetId,
     },
   })
 
@@ -68,43 +68,9 @@ export async function getRetweetsForPost(
     return undefined
   }
 
-  let retweetsFormatted: RetweetsFormatted[] | undefined = []
-  retweets.map(async ({ id, author, content, createdAt, mediaUrls }) => {
-    const user = await db.user.findUnique({
-      where: {
-        id: author,
-      },
-    })
+  console.log('retweets: ', retweets.length)
 
-    if (!user) {
-      return
-    }
-
-    const liked = await checkIfPostLiked(id, author)
-    const reposted = await checkIfPostReposted(id, author)
-
-    const likeCount = await countLikesForPost(id)
-    const repostCount = retweets.length
-
-    const retweetFormatted = {
-      avatarUrl: user.avatarUrl ?? '/default.jpg',
-      username: user.username,
-      createdAt,
-      content,
-      mediaUrls,
-      liked,
-      reposted,
-      likeCount,
-      repostCount,
-    }
-    retweetsFormatted.push(retweetFormatted)
-  })
-
-  if (!retweetsFormatted) {
-    return undefined
-  }
-
-  return retweetsFormatted
+  return retweets
 }
 
 export async function checkIfPostLiked(
