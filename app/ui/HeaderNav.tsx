@@ -1,3 +1,5 @@
+'use client'
+
 import Image from 'next/image'
 import {
   BellAlertIcon,
@@ -7,8 +9,10 @@ import {
   UsersIcon,
 } from '@heroicons/react/16/solid'
 import clsx from 'clsx'
+import { useUserResponse } from '../hooks/useResponse'
 
 export default function HeaderNav() {
+  const { response } = useUserResponse()
   return (
     <div>
       <ul className="flex flex-row gap-2">
@@ -62,8 +66,8 @@ export default function HeaderNav() {
         >
           <Image
             className="scale-100 overflow-hidden rounded-full"
-            alt="Foto de perfil de (usuario)"
-            src="/jordi-wild.webp"
+            alt={`Foto de perfil de ${response?.username}`}
+            src={`/${response?.avatarUrl}`}
             height={24}
             width={24}
           />

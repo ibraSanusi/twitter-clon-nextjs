@@ -3,7 +3,7 @@ import {
   checkIfPostReposted,
   countLikesForPost,
   getCommentsForPost,
-  getRetweetsForPost,
+  getPostRetweets,
 } from '@/lib/functions'
 import db from '@/services/db'
 import { NextRequest } from 'next/server'
@@ -91,24 +91,20 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   const followingTweetsFormatted = await Promise.all(
     followingUsersLastTweets.map(
-      async ({ id, author, content, createdAt, mediaUrls }) => {
+      async ({ id: tweetId, author, content, createdAt, mediaUrls }) => {
         const user = await db.user.findUnique({
           where: {
             id: author,
-          },
-          select: {
-            avatarUrl: true,
-            username: true,
           },
         })
 
         const [comments, retweets, liked, reposted, likeCount] =
           await Promise.all([
-            getCommentsForPost(id),
-            getRetweetsForPost(id),
-            checkIfPostLiked(id, userSessionId),
-            checkIfPostReposted(id, userSessionId),
-            countLikesForPost(id),
+            getCommentsForPost(tweetId),
+            getPostRetweets(tweetId),
+            checkIfPostLiked(tweetId, userSessionId),
+            checkIfPostReposted(tweetId, userSessionId),
+            countLikesForPost(tweetId),
           ])
 
         const commentCount = comments?.length ?? 0
@@ -119,8 +115,9 @@ export async function GET(request: NextRequest): Promise<Response> {
         }
 
         return {
-          id,
-          author,
+          tweetId,
+          userId: author,
+          fullname: user.fullname,
           avatarUrl: user.avatarUrl,
           username: user.username ?? 'Unknown',
           createdAt,
