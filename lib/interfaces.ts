@@ -1,3 +1,5 @@
+import { $Enums } from '@prisma/client'
+
 export interface ResponseData {
   code: number
   statusText: string
@@ -5,10 +7,11 @@ export interface ResponseData {
 }
 
 export interface CommentFormatted {
+  commentId: string
   tweetId: string
   avatarUrl: string
   username: string
-  createdAt: Date
+  createdAt: string
   content: string
   mediaUrls: string[]
   liked: boolean
@@ -57,4 +60,21 @@ export interface Follower {
   username: string
   avatarUrl: string
   role: string
+}
+
+export interface UnfollowedUsersResponse {
+  id: string
+  username: string
+  fullname: string
+  avatarUrl: string
+  email: string
+  role: $Enums.Role
+  followed: boolean
+  followersCount: number
+}
+
+export interface FollowResponse {
+  createdAt: Date
+  followerId: string
+  followingId: string
 }

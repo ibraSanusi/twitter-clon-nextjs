@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import TweetCardInteractions from './TweetCardInteractions'
 import TweetCardHeader from './TweetCardHeader'
+import CommentSection from './CommentSection'
 
 export default function TweetsSection() {
   const [tweets, setTweets] = useState<TweetResponse[]>()
@@ -59,22 +60,28 @@ export default function TweetsSection() {
 
                 <p className="px-4">{content}</p>
 
-                <Image
-                  className="w-full"
-                  alt={`Foto de perfil de ${username}`}
-                  src={`/${avatarUrl}`}
-                  height={0}
-                  width={555}
-                />
+                {mediaUrls.length > 0 && (
+                  <Image
+                    className="w-full"
+                    alt={`Foto de contenido de ${username}`}
+                    src={`/${mediaUrls[0]}`}
+                    height={0}
+                    width={555}
+                  />
+                )}
 
-                <TweetCardInteractions
-                  tweetId={tweetId}
-                  commentCount={commentCount}
-                  likeCount={likeCount}
-                  isLiked={liked}
-                  repostCount={repostCount}
-                  isReposted={reposted}
-                />
+                <div className="flex flex-col">
+                  <TweetCardInteractions
+                    tweetId={tweetId}
+                    commentCount={commentCount}
+                    likeCount={likeCount}
+                    isLiked={liked}
+                    repostCount={repostCount}
+                    isReposted={reposted}
+                  />
+
+                  <CommentSection comments={comments} tweetId={tweetId} />
+                </div>
               </article>
             )
           },

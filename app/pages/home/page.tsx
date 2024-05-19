@@ -12,6 +12,7 @@ import {
 } from '@heroicons/react/16/solid'
 import Image from 'next/image'
 import TweetsSection from '@/app/ui/TweetsSection'
+import UsersToFollow from '@/app/ui/UsersToFollow'
 
 export default function Page() {
   const { response } = useUserResponse()
@@ -38,6 +39,8 @@ export default function Page() {
         <PostSection />
         <TweetsSection />
       </main>
+
+      <UsersToFollow />
     </>
   )
 }

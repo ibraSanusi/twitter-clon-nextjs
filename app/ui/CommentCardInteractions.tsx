@@ -14,25 +14,25 @@ interface Props {
   commentCount: number
   isReposted: boolean
   repostCount: number
-  tweetId: string
+  commentId: string
 }
 
-export default function TweetCardInteractions({
+export default function CommentCardInteractions({
   isLiked,
   likeCount,
   commentCount,
   isReposted,
   repostCount,
-  tweetId,
+  commentId,
 }: Props) {
   const [liked, setLiked] = useState(isLiked)
   const [reposted, setReposted] = useState(isReposted)
   const [tweetsCount, setTweetsCount] = useState(repostCount)
   const [likesCount, setLikesCount] = useState(likeCount)
 
-  const handleLike = async () => {
+  const handleLikeComment = async () => {
     if (liked) {
-      // TODO: GENERAR EL ENDPOINT DE DISLIKE
+      // TODO: GENERAR EL ENDPOINT DE DISLIKE DEL COMENTARIO
       // const response = await fetch('/api/delete/like', {
       //   method: 'DELETE',
       //   body: JSON.stringify({ tweetId }),
@@ -46,31 +46,31 @@ export default function TweetCardInteractions({
       // const dislikeResponse = await response.json()
       // console.log('dislikeResponse: ', dislikeResponse)
     } else {
-      const response = await fetch('/api/post/like', {
+      const response = await fetch('/api/post/likeComment', {
         method: 'POST',
-        body: JSON.stringify({ tweetId }),
+        body: JSON.stringify({ commentId }),
       })
 
       if (!response.ok) {
-        alert('Error al dar like al tweet con id: ' + tweetId)
+        alert('Error al dar like al comentario con id: ' + commentId)
         return
       }
 
       setLiked(!liked)
       setLikesCount(likesCount + 1)
 
-      const likeResponse = await response.json()
-      console.log('likeResponse: ', likeResponse)
+      const commentLikeResponse = await response.json()
+      console.log('commentLikeResponse: ', commentLikeResponse)
     }
   }
 
   useEffect(() => {
-    console.log('tweetId: ', tweetId)
-  }, [tweetId])
+    console.log('commentId: ', commentId)
+  }, [commentId])
 
-  const handleRetweet = async () => {
+  const handleRetweetComment = async () => {
     if (reposted) {
-      // TODO: GENERAR EL ENDPOINT DE ELIMINAR RETWEET
+      // TODO: GENERAR EL ENDPOINT DE ELIMINAR RETWEET DEL COMENTARIO
       // const response = await fetch('/api/delete/retweet', {
       //   method: 'DELETE',
       //   body: JSON.stringify({ tweetId }),
@@ -85,48 +85,53 @@ export default function TweetCardInteractions({
       // console.log('deleteRetweetResponse: ', deleteRetweetResponse)
     } else {
       // TODO: CREAR EL ENPOINT PARA DAR RETWEET
-      const response = await fetch('/api/post/retweet', {
+      const response = await fetch('/api/post/retweetComment', {
         method: 'POST',
-        body: JSON.stringify({ tweetId }),
+        body: JSON.stringify({ commentId }),
       })
 
       if (!response.ok) {
-        alert('Error al dar retweet al tweet con id: ' + tweetId)
+        alert('Error al dar retweet al comment con id: ' + commentId)
         return
       }
 
       setReposted(!reposted)
       setTweetsCount(commentCount + 1)
 
-      const retweetResponse = await response.json()
-      console.log('retweetResponse: ', retweetResponse)
+      const commentRetweetResponse = await response.json()
+      console.log('commentRetweetResponse: ', commentRetweetResponse)
     }
   }
 
+  // TODO: CREAR COMENTARIO DE COMENTARIO
+
   return (
-    <div className="flex flex-row gap-4 p-4">
+    <div className="flex flex-row gap-4 py-2">
       <button
-        onClick={handleLike}
+        onClick={handleLikeComment}
         className={clsx('flex flex-row items-center gap-1 hover:text-red-500', {
           'text-red-500': liked,
           'text-slate-600': !liked,
         })}
       >
-        <div className="size-6">
+        <div className="size-4">
           <HeartIcon />
         </div>
         <span className="text-sm">{likesCount}</span>
       </button>
 
-      <button className="flex flex-row items-center gap-1 text-slate-600 hover:text-blue-500">
-        <div className="size-6">
+      <button
+        disabled
+        className="flex cursor-not-allowed flex-row items-center gap-1 text-slate-600 hover:text-blue-500"
+      >
+        <div className="size-4">
           <ChatBubbleBottomCenterIcon />
         </div>
         <span className="text-sm">{commentCount}</span>
       </button>
 
       <button
-        onClick={handleRetweet}
+        onClick={handleRetweetComment}
         className={clsx(
           'flex flex-row items-center gap-1 hover:text-green-500',
           {
@@ -135,7 +140,7 @@ export default function TweetCardInteractions({
           },
         )}
       >
-        <div className="size-6">
+        <div className="size-4">
           <ArrowPathRoundedSquareIcon />
         </div>
         <span className="text-sm">{tweetsCount}</span>

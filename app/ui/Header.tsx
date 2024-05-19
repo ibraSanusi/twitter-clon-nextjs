@@ -4,7 +4,7 @@ import { MagnifyingGlassIcon } from '@heroicons/react/16/solid'
 
 export default function Header() {
   return (
-    <header className="flex justify-center bg-white">
+    <header className="fixed top-0 z-50 flex w-full justify-center bg-white">
       <nav className="m-auto flex w-full flex-row justify-between py-2 xl:max-w-[1128px]">
         <div className="flex flex-row items-center gap-2">
           <MainLogo size={40} />

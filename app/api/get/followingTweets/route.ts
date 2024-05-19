@@ -107,6 +107,9 @@ export async function GET(request: NextRequest): Promise<Response> {
             countLikesForPost(tweetId),
           ])
 
+        console.log('liked: ', liked)
+        console.log('reposted: ', reposted)
+
         const commentCount = comments?.length ?? 0
         const repostCount = retweets?.length ?? 0
 

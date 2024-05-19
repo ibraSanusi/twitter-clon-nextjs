@@ -42,11 +42,9 @@ function LayoutSqueleton({ children }: { children: React.ReactNode }) {
       <Header />
 
       {/* TODO: Convertirlo a un fragmento */}
-      <section className="m-auto mt-6 flex w-full flex-row gap-8 xl:max-w-[1128px]">
+      <section className="m-auto mt-6 flex w-full flex-row gap-8 pt-[55px] xl:max-w-[1128px]">
         {children}
       </section>
-
-      <aside></aside>
 
       <footer></footer>
     </section>

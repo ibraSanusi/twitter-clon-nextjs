@@ -88,7 +88,7 @@ export default function PostSection() {
         />
         <button
           onClick={handlePublishClick}
-          className="w-full rounded-full border-[1px] border-black p-4 text-start text-sm font-semibold text-gray-600 hover:bg-[#F3F3F3] hover:text-black"
+          className="w-full rounded-full border-[1px] p-4 text-start text-sm text-gray-600 hover:bg-[#F3F3F3] hover:text-black"
         >
           Crear publicacion
         </button>
