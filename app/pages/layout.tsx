@@ -35,16 +35,14 @@ function LayoutSqueleton({ children }: { children: React.ReactNode }) {
   }, [response])
 
   return (
-    <section className="bg-[#f7f3eb] pb-6">
+    <section className="bg-[#f7f3eb]">
       {/* <div className="absolute top-0 -z-10 h-full w-full bg-[#f4f2ee]">
         <div className="absolute bottom-auto left-auto right-0 top-0 h-[500px] w-[500px] -translate-x-[30%] translate-y-[20%] rounded-full bg-[rgba(247,90,90,0.5)] opacity-50 blur-[80px]"></div>
       </div> */}
       <Header />
 
       {/* TODO: Convertirlo a un fragmento */}
-      <section className="m-auto mt-6 flex w-full flex-row gap-8 pt-[55px] xl:max-w-[1128px]">
-        {children}
-      </section>
+      <>{children}</>
 
       <footer></footer>
     </section>

@@ -78,3 +78,13 @@ export interface FollowResponse {
   followerId: string
   followingId: string
 }
+
+export interface UsersFollowed {
+  id: string
+  fullname: string
+  email: string
+  username: string
+  password: string
+  avatarUrl: string
+  role: string
+}

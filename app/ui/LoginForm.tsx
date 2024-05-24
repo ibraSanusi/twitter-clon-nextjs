@@ -50,7 +50,7 @@ export default function LoginForm() {
       }
 
       if (res?.status === LoginStatus.Success) {
-        route.push('/home')
+        route.push('/pages/home')
       }
     }
   }
