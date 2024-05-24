@@ -14,16 +14,16 @@ model User {
   email           String           @unique
   username        String           @unique
   password        String
-  avatarUrl       String           @default("/default-avatar.jpg")
+  avatarUrl       String           @default("default-avatar.jpg")
   role            Role             @default(USER)
-  tweets          Tweet[]
   comments        Comment[]
+  commentLikes    CommentLike[]
+  commentRetweets CommentRetweet[]
   followers       Follow[]         @relation("FollowFollower")
   followings      Follow[]         @relation("FollowFollowing")
   likes           Like[]
   retweets        Retweet[]
-  commentLikes    CommentLike[]
-  commentRetweets CommentRetweet[]
+  tweets          Tweet[]
 }
 
 model Follow {
@@ -43,10 +43,10 @@ model Comment {
   tweetId         String
   createdAt       DateTime         @default(now())
   mediaUrls       String[]
+  user            User             @relation(fields: [author], references: [id])
+  tweet           Tweet            @relation(fields: [tweetId], references: [id])
   commentLikes    CommentLike[]
   retweetComments CommentRetweet[]
-  tweet           Tweet            @relation(fields: [tweetId], references: [id])
-  user            User             @relation(fields: [author], references: [id])
 }
 
 model Tweet {
@@ -55,8 +55,8 @@ model Tweet {
   content   String
   createdAt DateTime  @default(now())
   mediaUrls String[]
-  likes     Like[]
   comments  Comment[]
+  likes     Like[]
   retweets  Retweet[]
   user      User      @relation(fields: [author], references: [id])
 }
@@ -65,8 +65,8 @@ model Like {
   createdAt DateTime @default(now())
   userId    String
   tweetId   String
-  user      User     @relation(fields: [userId], references: [id])
   tweet     Tweet    @relation(fields: [tweetId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 
   @@id([userId, tweetId])
 }

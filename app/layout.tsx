@@ -15,6 +15,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  // TODO: PORVEER A TODA LA APLICACION DE LA SESSION
   return (
     <html lang="en">
       <body className={`${exo2.className} antialiased`}>{children}</body>
