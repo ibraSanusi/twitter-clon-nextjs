@@ -41,5 +41,6 @@ Tendrá funcionalidades de sugurida como autenticación, acciones de usuarios co
 3. Tailwind
 4. React
 5. NextJs
+6. Socket.io
 
 > (Aún está por mejorar el README.md)
