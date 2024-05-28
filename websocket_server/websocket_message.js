@@ -1,4 +1,4 @@
-const { createServer, METHODS } = require('http')
+const { createServer } = require('http')
 const { Server } = require('socket.io')
 
 const httpServer = createServer()
@@ -6,14 +6,21 @@ const io = new Server(httpServer, {
   cors: {
     // TODO: Cambiar el origin a uno especifico para anadir mas seguridad
     origin: '*',
-    METHODS: ['GET', 'POST'],
+    methods: ['GET', 'POST'],
   },
+  connectionStateRecovery: {},
 })
 
-io.on('connection', async (socket) => {
-  socket.on('myevent', (data) => {
+io.on('connection', (socket) => {
+  console.log('Someone has connected')
+
+  socket.on('chat message', (data) => {
+    io.emit('chat message', data) // Emitir a todos los clientes conectados
     console.log('Message from client: ', data)
-    socket.emit('responseEvent', 'Hello client')
+  })
+
+  socket.on('disconnect', () => {
+    console.log('Someone has disconnected')
   })
 })
 

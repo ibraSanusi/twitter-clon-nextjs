@@ -43,8 +43,6 @@ function LayoutSqueleton({ children }: { children: React.ReactNode }) {
 
       {/* TODO: Convertirlo a un fragmento */}
       <>{children}</>
-
-      <footer></footer>
     </section>
   )
 }
