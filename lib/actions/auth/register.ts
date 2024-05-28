@@ -14,7 +14,7 @@ export async function register(formData: FormData) {
   const hashedPassword = await bcrypt.hash(password, 10)
   hashedPassword.toString()
 
-  const data = { fullname, username, email, password }
+  const data = { fullname, username, email, password } // Raro
 
   if (fullname && username && email && hashedPassword) {
     await db.user.create({

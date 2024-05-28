@@ -1,9 +1,9 @@
-import * as React from 'react'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { TextField, styled } from '@mui/material'
+import { FormEventHandler } from 'react'
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -25,22 +25,48 @@ const CustomButton = styled(Button)({
   },
 })
 
-export default function UserModal() {
-  const [open, setOpen] = React.useState(true)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+interface Props {
+  closeCreateModal: () => void
+  createUser: (formData: FormData) => Promise<void>
+  createModalVisibility: boolean
+}
+
+export default function UserModal({
+  closeCreateModal,
+  createModalVisibility,
+  createUser,
+}: Props) {
+  const handleCreateUser: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault()
+
+    const form = e.currentTarget
+    console.log({ form })
+
+    const email = form.email.value
+    const username = form.username.value
+    const fullname = form.fullname.value
+    const password = form.password.value
+
+    let formData = new FormData()
+    formData.append('email', email)
+    formData.append('username', username)
+    formData.append('fullname', fullname)
+    formData.append('password', password)
+
+    createUser(formData)
+  }
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={createModalVisibility}
+        onClose={closeCreateModal}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
           <Box
+            onSubmit={handleCreateUser}
             component="form"
             sx={{
               '& > :not(style)': { m: 1, width: '25ch' },
@@ -58,7 +84,9 @@ export default function UserModal() {
             <TextField id="password" label="Password" variant="filled" />
 
             <CustomButton
-              sx={{ background: '#339FFF', color: 'white' }}
+              type="submit"
+              className="bg-blue-700 text-white"
+              // sx={{ backgroundColor: '#339FFF', color: 'white' }}
               variant="contained"
             >
               Create
