@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import { TextField, styled } from '@mui/material'
 import { FormEventHandler } from 'react'
+import { Role } from '@prisma/client'
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -40,20 +41,26 @@ export default function UserModal({
     e.preventDefault()
 
     const form = e.currentTarget
-    console.log({ form })
 
     const email = form.email.value
     const username = form.username.value
     const fullname = form.fullname.value
+    const role: string = Object.values(Role).includes(form.rol.value)
+      ? form.rol.value
+      : 'USER'
     const password = form.password.value
 
     let formData = new FormData()
     formData.append('email', email)
     formData.append('username', username)
     formData.append('fullname', fullname)
+    formData.append('role', role)
     formData.append('password', password)
 
     createUser(formData)
+
+    // Restaurar valores a nada
+    form.reset()
   }
 
   return (
@@ -81,6 +88,7 @@ export default function UserModal({
             <TextField id="email" label="Email" variant="filled" />
             <TextField id="username" label="Username" variant="filled" />
             <TextField id="fullname" label="Fullname" variant="filled" />
+            <TextField id="rol" label="Role" variant="filled" />
             <TextField id="password" label="Password" variant="filled" />
 
             <CustomButton

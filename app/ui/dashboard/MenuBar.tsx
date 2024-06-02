@@ -9,8 +9,8 @@ import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
-import MailIcon from '@mui/icons-material/Mail'
+import Face2Icon from '@mui/icons-material/Face2'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 import { useState } from 'react'
 
 export default function MenuBar({
@@ -24,21 +24,24 @@ export default function MenuBar({
     openMenu(newOpen)
   }
 
+  const drawerListIcons = [
+    <Face2Icon key="Face2Icon" />,
+    <FavoriteIcon key="FavoriteIcon" />,
+  ]
+
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+        {['Users', 'Likes'].map((text, index) => (
           <ListItem key={text} disablePadding>
             <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
+              <ListItemIcon>{drawerListIcons[index]}</ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
         ))}
       </List>
-      <Divider />
+      {/* <Divider />
       <List>
         {['All mail', 'Trash', 'Spam'].map((text, index) => (
           <ListItem key={text} disablePadding>
@@ -50,7 +53,7 @@ export default function MenuBar({
             </ListItemButton>
           </ListItem>
         ))}
-      </List>
+      </List> */}
     </Box>
   )
 

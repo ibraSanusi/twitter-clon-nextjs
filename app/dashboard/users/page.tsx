@@ -38,13 +38,25 @@ export default function Page() {
       body: formData,
     })
 
+    if (response.status !== 201) {
+      return
+    }
+
     console.log({ response })
     const newUser: User = await response.json()
 
-    console.log({ newUser })
+    console.log(newUser)
 
-    setUsers((prevUsers) => (prevUsers ? [...prevUsers, newUser] : [newUser]))
+    setUsers((prevUsers) => prevUsers && [...prevUsers, newUser])
+    // const newUsers = users
+    // newUsers && newUsers?.push(newUser)
+
+    // console.log({ newUsers })
   }
+
+  useEffect(() => {
+    console.log({ users })
+  }, [users])
 
   return (
     <>

@@ -10,9 +10,6 @@ import {
 } from '@heroicons/react/16/solid'
 import PostModal from './PostModal'
 
-const ERROR_MESSAGE = 'Fallo al publicar el post.'
-const SUCCESS_MESSAGE = 'Tweet subido correctamente.'
-
 export default function PostSection() {
   const [value, setValue] = useState('')
   const [error, setError] = useState(false)

@@ -27,24 +27,24 @@ export default function TweetCardInteractions({
 }: Props) {
   const [liked, setLiked] = useState(isLiked)
   const [reposted, setReposted] = useState(isReposted)
-  const [tweetsCount, setTweetsCount] = useState(repostCount)
+  const [reposteCount, setResposteCount] = useState(repostCount)
   const [likesCount, setLikesCount] = useState(likeCount)
 
   const handleLike = async () => {
     if (liked) {
       // TODO: GENERAR EL ENDPOINT DE DISLIKE
-      // const response = await fetch('/api/delete/like', {
-      //   method: 'DELETE',
-      //   body: JSON.stringify({ tweetId }),
-      // })
-      // if (!response.ok) {
-      //   alert('Error al eliminar el like del tweet con id: ' + tweetId)
-      //   return
-      // }
-      // setLiked(!liked)
-      // setLikesCount(likesCount - 1)
-      // const dislikeResponse = await response.json()
-      // console.log('dislikeResponse: ', dislikeResponse)
+      const response = await fetch('/api/post/unlike', {
+        method: 'DELETE',
+        body: JSON.stringify({ tweetId }),
+      })
+      if (!response.ok) {
+        alert('Error al eliminar el like del tweet con id: ' + tweetId)
+        return
+      }
+      setLiked(!liked)
+      setLikesCount(likesCount - 1)
+      const dislikeResponse = await response.json()
+      console.log('dislikeResponse: ', dislikeResponse)
     } else {
       const response = await fetch('/api/post/like', {
         method: 'POST',
@@ -71,18 +71,18 @@ export default function TweetCardInteractions({
   const handleRetweet = async () => {
     if (reposted) {
       // TODO: GENERAR EL ENDPOINT DE ELIMINAR RETWEET
-      // const response = await fetch('/api/delete/retweet', {
-      //   method: 'DELETE',
-      //   body: JSON.stringify({ tweetId }),
-      // })
-      // if (!response.ok) {
-      //   alert('Error al eliminar el retweet del tweet con id: ' + tweetId)
-      //   return
-      // }
-      // setReposted(!reposted)
-      // setCommentsCount(commentCount - 1)
-      // const deleteRetweetResponse = await response.json()
-      // console.log('deleteRetweetResponse: ', deleteRetweetResponse)
+      const response = await fetch('/api/post/retweet', {
+        method: 'DELETE',
+        body: JSON.stringify({ tweetId }),
+      })
+      if (!response.ok) {
+        alert('Error al eliminar el retweet del tweet con id: ' + tweetId)
+        return
+      }
+      setReposted(!reposted)
+      setResposteCount(commentCount - 1)
+      const deleteRetweetResponse = await response.json()
+      console.log('deleteRetweetResponse: ', deleteRetweetResponse)
     } else {
       // TODO: CREAR EL ENPOINT PARA DAR RETWEET
       const response = await fetch('/api/post/retweet', {
@@ -96,7 +96,7 @@ export default function TweetCardInteractions({
       }
 
       setReposted(!reposted)
-      setTweetsCount(commentCount + 1)
+      setResposteCount(reposteCount + 1)
 
       const retweetResponse = await response.json()
       console.log('retweetResponse: ', retweetResponse)
@@ -138,7 +138,7 @@ export default function TweetCardInteractions({
         <div className="size-6">
           <ArrowPathRoundedSquareIcon />
         </div>
-        <span className="text-sm">{tweetsCount}</span>
+        <span className="text-sm">{reposteCount}</span>
       </button>
     </div>
   )

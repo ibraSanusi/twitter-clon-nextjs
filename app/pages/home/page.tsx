@@ -2,15 +2,7 @@
 
 import { useUserResponse } from '@/app/hooks/useResponse'
 import SideBar from '@/app/ui/SideBar'
-import TweetCards from '@/app/ui/TweetCards'
 import PostSection from '@/app/ui/PostSection'
-import { banger } from '@/app/ui/fonts'
-import {
-  Bars3CenterLeftIcon,
-  CalendarDaysIcon,
-  PhotoIcon,
-} from '@heroicons/react/16/solid'
-import Image from 'next/image'
 import TweetsSection from '@/app/ui/TweetsSection'
 import UsersToFollow from '@/app/ui/UsersToFollow'
 

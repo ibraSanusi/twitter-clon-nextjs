@@ -1,6 +1,7 @@
 import { register } from '@/lib/actions/auth/register'
 import { authMiddleware } from '@/middleware/authMiddleware'
 import db from '@/services/db'
+import { $Enums } from '@prisma/client'
 import { decode } from 'next-auth/jwt'
 import { NextRequest } from 'next/server'
 
@@ -17,9 +18,26 @@ export async function POST(request: NextRequest): Promise<Response> {
     const formData = await request.formData()
     console.log({ formData })
 
-    const newUser = register(formData)
+    const newUser:
+      | {
+          id: string
+          fullname: string
+          email: string
+          username: string
+          password: string
+          avatarUrl: string
+          role: $Enums.Role
+        }
+      | undefined = await register(formData)
 
-    return new Response(JSON.stringify({ newUser }), { status: 201 })
+    if (!newUser) {
+      return new Response(
+        JSON.stringify({ message: 'No se creo el usuario' }),
+        { status: 401 },
+      )
+    }
+
+    return new Response(JSON.stringify(newUser), { status: 201 })
   } catch (error) {
     console.error('Error al procesar la solicitud:', error)
     return new Response('Error interno del servidor', { status: 500 })
