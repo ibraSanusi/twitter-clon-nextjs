@@ -1,12 +1,8 @@
 'use client'
 
 import Image from 'next/image'
-import NavLinks from './NavLinks'
 import { signOut } from 'next-auth/react'
 import { useUserResponse } from '@/app/hooks/useResponse'
-import TweetCards from '@/app/ui/TweetCards'
-import TweetPost from '@/app/ui/PostSection'
-import { banger } from '@/app/ui/fonts'
 
 export default function SideBar() {
   const { response } = useUserResponse()
