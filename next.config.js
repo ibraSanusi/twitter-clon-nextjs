@@ -10,6 +10,14 @@ module.exports = {
         source: '/register',
         destination: '/auth/register',
       },
+      {
+        source: '/home',
+        destination: '/pages/home',
+      },
+      {
+        source: '/messages',
+        destination: '/pages/messages',
+      },
     ]
   },
 }

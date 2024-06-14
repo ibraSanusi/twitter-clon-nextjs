@@ -34,9 +34,10 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
-    "@types/node": "^20",
+    "@types/node": "^20.14.1",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/socket.io": "^3.0.2",
     "@types/uuid": "^9.0.8",
     "@vercel/postgres": "^0.7.2",
     "autoprefixer": "^10.4.18",
