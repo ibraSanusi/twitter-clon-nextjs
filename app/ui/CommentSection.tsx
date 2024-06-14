@@ -37,10 +37,10 @@ export default function CommentSection({ comments, tweetId }: Props) {
               return (
                 <article className="flex flex-row gap-1" key={commentId}>
                   <Image
-                    className="scale-100 overflow-hidden rounded-full border-2 border-white xl:max-h-[40px] xl:max-w-[40px]"
+                    className="max-h-[40px] scale-100 overflow-hidden rounded-full border-2 border-white xl:max-w-[40px]"
                     alt={`Foto de perfil de ${username}`}
                     src={`/${avatarUrl}`}
-                    height={40}
+                    height={0}
                     width={40}
                   />
                   <article className="w-full rounded-r-md rounded-bl-md bg-[#F2F2F2] p-2">

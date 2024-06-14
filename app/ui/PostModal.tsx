@@ -52,7 +52,7 @@ export default function PostModal({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 top-0 z-50 flex items-center justify-center overscroll-none bg-black bg-opacity-80">
-      <section className="flex w-full flex-col justify-center gap-8 rounded-xl bg-white p-8 opacity-100 xl:max-w-[744px]">
+      <section className="mx-8 flex w-full flex-col justify-center gap-8 rounded-xl bg-white p-8 opacity-100 xl:mx-0 xl:max-w-[744px]">
         <section className="flex flex-row items-center justify-between gap-2">
           <div className="flex flex-row items-center gap-2">
             <Image

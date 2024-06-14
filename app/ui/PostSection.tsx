@@ -93,22 +93,22 @@ export default function PostSection() {
 
       <nav>
         <ul className="flex flex-row justify-around">
-          <li>
-            <button className="flex flex-row items-center gap-2 rounded-md hover:bg-[#f4f2ee]">
+          <li className="flex items-center">
+            <button className="flex flex-row items-center rounded-md hover:bg-[#f4f2ee] xl:gap-2">
               <PhotoIcon className="w-8 text-blue-500" />
-              <span>Contenido multimedia</span>
+              <span className="text-sm md:text-base">Contenido multimedia</span>
             </button>
           </li>
-          <li>
+          <li className="flex items-center">
             <button className="flex flex-row items-center gap-2 rounded-md hover:bg-[#f4f2ee]">
               <CalendarDaysIcon className="w-8 text-blue-500" />
-              <span>Evento</span>
+              <span className="text-sm md:text-base">Evento</span>
             </button>
           </li>
-          <li>
+          <li className="flex items-center">
             <button className="flex flex-row items-center gap-2 rounded-md hover:bg-[#f4f2ee]">
               <Bars3CenterLeftIcon className="w-8 text-blue-500" />
-              <span>Escribir articulo</span>
+              <span className="text-sm md:text-base">Escribir articulo</span>
             </button>
           </li>
         </ul>

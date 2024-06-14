@@ -28,7 +28,7 @@ function LayoutSqueleton({ children }: { children: React.ReactNode }) {
     }
 
     fetchData()
-  }, [addResponse, response])
+  }, [])
 
   useEffect(() => {
     console.log('userContextResponse: ', response)

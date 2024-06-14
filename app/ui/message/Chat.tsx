@@ -5,35 +5,42 @@ import { Button, OutlinedInput } from '@mui/material'
 import SendIcon from '@mui/icons-material/Send'
 import { FormEventHandler, useEffect, useState } from 'react'
 import { io, Socket } from 'socket.io-client'
-
-// function MyFormHelperText() {
-//   const { focused } = useFormControl() || {}
-
-//   const helperText = useMemo(() => {
-//     if (focused) {
-//       return 'This field is being focused'
-//     }
-
-//     return 'Helper text'
-//   }, [focused])
-
-//   return <FormHelperText>{helperText}</FormHelperText>
-// }
+import clsx from 'clsx'
+import { useUserResponse } from '@/app/hooks/useResponse'
 
 export default function Chat() {
-  const [messages, setMessages] = useState<string[]>([])
+  const { response } = useUserResponse()
+  const [messages, setMessages] = useState<{ username: string; msg: string }[]>(
+    [],
+  )
   const [socket, setSocket] = useState<Socket | null>(null)
+  const [message, setMessage] = useState<string>('')
+  const [username, setUsername] = useState<string>('')
+
+  useEffect(() => {
+    console.log(response?.username)
+  }, [response])
 
   useEffect(() => {
     const newSocket = io('http://127.0.0.1:5000')
     setSocket(newSocket)
 
+    if (!response?.username) {
+      // alert('No ha usuario')
+      return
+    }
+    const newUsername = response.username
+    setUsername(newUsername)
+
+    // Enviar nombre de usuario al conectarse
+    newSocket.emit('set username', newUsername)
+
     newSocket.on('connect', () => {
       console.log('Connected with socket ID:', newSocket.id)
+    })
 
-      newSocket.on('chat message', (data) => {
-        setMessages((prevMessages) => [...prevMessages, data])
-      })
+    newSocket.on('chat message', (data) => {
+      setMessages((prevMessages) => [...prevMessages, data])
     })
 
     newSocket.onAny((event, ...args) => {
@@ -43,14 +50,13 @@ export default function Chat() {
     return () => {
       newSocket.disconnect()
     }
-  }, [])
+  }, [response])
 
   const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
-    if (socket) {
-      const msg = e.currentTarget.message.value
-      socket.emit('chat message', msg)
-      e.currentTarget.message.value = ''
+    if (socket && message) {
+      socket.emit('chat message', message)
+      setMessage('')
     }
   }
 
@@ -61,18 +67,29 @@ export default function Chat() {
       my={4}
       display="flex"
       flexDirection={'column'}
-      //   alignItems="end"
-      //   justifyItems={'end'}
-      //   justifyContent={'end'}
       gap={4}
       p={2}
-      sx={{ border: '2px solid grey' }}
+      sx={{
+        border: '2px solid grey',
+        // maxHeight: '500px',
+        // maxWidth: '1028px',
+        // width: '100%',
+        // height: '100%',
+      }}
     >
       <div className="flex h-full w-full flex-col justify-end gap-2">
         <ul className="flex h-full flex-col gap-2 overflow-scroll overflow-x-hidden">
-          {messages.map((message, index) => {
-            return <li key={index}>{message}</li>
-          })}
+          {messages.map((message, index) => (
+            <li
+              className={clsx({
+                'text-end': message.username === username,
+                'text-start': message.username !== username,
+              })}
+              key={index}
+            >
+              <strong>{message.username}</strong>: {message.msg}
+            </li>
+          ))}
         </ul>
         <form
           onSubmit={handleSubmit}
@@ -84,18 +101,17 @@ export default function Chat() {
             id="message"
             className="w-full"
             placeholder="Please enter text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
           />
-          {/* <TextareaAutosize className="h-full w-full" /> */}
           <Button
             className="bg-[#42A5F5] text-white"
             variant="contained"
             endIcon={<SendIcon />}
+            type="submit"
           >
             Send
           </Button>
-          {/* <FormControl sx={{ width: '100%' }}>
-          <MyFormHelperText />
-        </FormControl> */}
         </form>
       </div>
     </Box>
