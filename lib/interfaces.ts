@@ -88,3 +88,9 @@ export interface UsersFollowed {
   avatarUrl: string
   role: string
 }
+
+export interface UserRanking {
+  id: number
+  username: string
+  followersCount: number
+}
