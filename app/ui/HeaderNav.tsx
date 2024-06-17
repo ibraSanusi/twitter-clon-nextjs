@@ -53,13 +53,23 @@ export default function HeaderNav() {
         </li>
         <li className="ml-4 flex flex-col items-center justify-center xl:ml-0 xl:w-20">
           <Link href="" className="flex flex-col items-center">
-            <Image
-              className="scale-100 overflow-hidden rounded-full"
-              alt={`Foto de perfil de ${response?.username}`}
-              src={`/${response?.avatarUrl}`}
-              height={24}
-              width={24}
-            />
+            {response?.avatarUrl ? (
+              <Image
+                className="scale-100 overflow-hidden rounded-full"
+                alt={`Foto de perfil de ${response?.username}`}
+                src={`/${response?.avatarUrl}`}
+                height={24}
+                width={24}
+              />
+            ) : (
+              <Image
+                className="scale-100 overflow-hidden rounded-full"
+                alt={`Foto de perfil de ${response?.username}`}
+                src="/default-avatar.jpg"
+                height={24}
+                width={24}
+              />
+            )}
             <span className="hidden text-xs xl:inline-block">Yo</span>
           </Link>
         </li>

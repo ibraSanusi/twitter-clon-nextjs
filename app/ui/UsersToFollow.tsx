@@ -2,8 +2,9 @@
 
 import { FollowResponse, UnfollowedUsersResponse } from '@/lib/interfaces'
 import Image from 'next/image'
-import { MouseEventHandler, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import FollowCard from './FollowCard'
+import { Skeleton } from '@mui/material'
 
 export default function UsersToFollow() {
   const [unfollowedUsers, setUnfollowedUsers] =
@@ -32,9 +33,9 @@ export default function UsersToFollow() {
     <aside className="hidden h-fit w-full rounded-md bg-white p-4 xl:inline-block">
       <h3 className="text-xl font-bold">A quién seguir...</h3>
 
-      <section className="mt-2 flex flex-col gap-2">
-        {unfollowedUsers &&
-          unfollowedUsers.map(
+      {unfollowedUsers ? (
+        <section className="mt-2 flex flex-col gap-2">
+          {unfollowedUsers.map(
             ({
               id: userId,
               username,
@@ -57,7 +58,33 @@ export default function UsersToFollow() {
               )
             },
           )}
-      </section>
+        </section>
+      ) : (
+        Array.from({ length: 3 }).map((_, index) => (
+          <article className="mt-2 flex flex-row gap-2 p-1" key={index}>
+            <Skeleton
+              animation="wave"
+              variant="circular"
+              width={28}
+              height={28}
+            />
+            <div className="flex w-full flex-col justify-center">
+              <Skeleton
+                animation="wave"
+                height={10}
+                width="80%"
+                style={{ marginBottom: 6 }}
+              />
+              <Skeleton
+                animation="wave"
+                height={10}
+                width="40%"
+                style={{ marginBottom: 6 }}
+              />
+            </div>
+          </article>
+        ))
+      )}
     </aside>
   )
 }

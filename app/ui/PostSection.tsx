@@ -9,6 +9,7 @@ import {
   PhotoIcon,
 } from '@heroicons/react/16/solid'
 import PostModal from './PostModal'
+import { Skeleton } from '@mui/material'
 
 export default function PostSection() {
   const [value, setValue] = useState('')
@@ -76,13 +77,22 @@ export default function PostSection() {
   return (
     <section className="flex w-full flex-col gap-6 rounded-xl bg-white p-4 xl:max-h-[592px] xl:min-w-[555px] xl:max-w-[555px]">
       <div className="flex w-full flex-row gap-2">
-        <Image
-          className="scale-100 overflow-hidden rounded-full border-2 border-white"
-          alt={`Foto de perfil de ${response?.username}`}
-          src={`/${response?.avatarUrl}`}
-          height={64}
-          width={64}
-        />
+        {response?.avatarUrl ? (
+          <Image
+            className="scale-100 overflow-hidden rounded-full border-2 border-white"
+            alt={`Foto de perfil de ${response?.username}`}
+            src={`/${response?.avatarUrl}`}
+            height={64}
+            width={64}
+          />
+        ) : (
+          <Skeleton
+            animation="wave"
+            variant="circular"
+            width={64}
+            height={56.15}
+          />
+        )}
         <button
           onClick={handlePublishClick}
           className="w-full rounded-full border-[1px] p-4 text-start text-sm text-gray-600 hover:bg-[#F3F3F3] hover:text-black"
