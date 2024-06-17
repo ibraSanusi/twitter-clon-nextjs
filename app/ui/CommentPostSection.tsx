@@ -48,10 +48,10 @@ export default function CommentPostSection({ response, tweetId }: Props) {
   return (
     <div className="flex flex-row gap-2">
       <Image
-        className="scale-100 overflow-hidden rounded-full border-2 border-white xl:max-h-[40px] xl:max-w-[40px]"
+        className="max-h-[40px] scale-100 overflow-hidden rounded-full border-2 border-white xl:max-w-[40px]"
         alt={`Foto de perfil de ${response?.username}`}
         src={`/${response?.avatarUrl}`}
-        height={40}
+        height={0}
         width={40}
       />
 

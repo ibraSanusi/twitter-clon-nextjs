@@ -1,4 +1,5 @@
 import { FollowResponse } from '@/lib/interfaces'
+import clsx from 'clsx'
 import Image from 'next/image'
 import React, { MouseEventHandler, useState } from 'react'
 
@@ -24,17 +25,30 @@ export default function FollowCard({
 
     console.log('followingId: ', followingId)
 
-    const response = await fetch('/api/post/follow', {
-      method: 'POST',
-      body: JSON.stringify({ followingId }),
-    })
+    if (!isFollowed) {
+      const response = await fetch('/api/post/follow', {
+        method: 'POST',
+        body: JSON.stringify({ followingId }),
+      })
 
-    if (!response.ok) {
-      return
+      if (!response.ok) {
+        return
+      }
+
+      setIsFollowed(true)
+      const followResponse: FollowResponse = await response.json()
+    } else {
+      const response = await fetch('/api/post/unfollow', {
+        method: 'POST',
+        body: JSON.stringify({ followingId }),
+      })
+
+      if (!response.ok) {
+        return
+      }
+
+      setIsFollowed(false)
     }
-
-    setIsFollowed(true)
-    const followResponse: FollowResponse = await response.json()
   }
   //   TODO: DEJAR DE SEGUIR A USUARIO TRAS SEGUIR
 
@@ -55,7 +69,14 @@ export default function FollowCard({
       </div>
 
       <button
-        className="rounded-md bg-[#f4f2ee] px-2 py-1 text-xs text-black hover:bg-black hover:text-white"
+        className={clsx(
+          'rounded-md bg-[#f4f2ee] px-2 py-1 text-xs text-black',
+          {
+            'hover:bg-blue-700 hover:text-white': !isFollowed,
+            'bg-white text-red-500 outline outline-1 hover:bg-red-500 hover:text-white':
+              isFollowed,
+          },
+        )}
         id={userId}
         onClick={handleFollow}
       >

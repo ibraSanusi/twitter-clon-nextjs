@@ -5,7 +5,7 @@ import Link from 'next/link'
 
 export default async function Page() {
   return (
-    <section className="grid h-dvh w-full grid-cols-2 justify-center py-8">
+    <section className="grid w-full grid-cols-2 justify-center py-8">
       {/* Left section */}
       <article className="flex items-end justify-end">
         <div className="h-[664px] w-[629px]">

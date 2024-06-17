@@ -4,31 +4,17 @@ import { useEffect, useState } from 'react'
 import TweetCardInteractions from './TweetCardInteractions'
 import TweetCardHeader from './TweetCardHeader'
 import CommentSection from './CommentSection'
+import { IconButton, Skeleton } from '@mui/material'
+import { GridMoreVertIcon } from '@mui/x-data-grid'
 
-export default function TweetsSection() {
-  const [tweets, setTweets] = useState<TweetResponse[]>()
-  // Recuperar los tweets de los usuarios a los que sigue el usuario en sesion
-  useEffect(() => {
-    const getFollowingTweets = async () => {
-      const response = await fetch('/api/get/followingTweets')
+interface Props {
+  tweets?: TweetResponse[]
+}
 
-      if (!response.ok) {
-        alert('Error al intentar conseguir los tweets.')
-        return
-      }
-
-      const followingTweets: TweetResponse[] = await response.json()
-      setTweets(followingTweets)
-
-      console.log('followingTweets: ', followingTweets)
-    }
-
-    getFollowingTweets()
-  }, [])
-
+export default function TweetsSection({ tweets }: Props) {
   return (
     <section className="flex flex-col gap-4">
-      {tweets &&
+      {tweets ? (
         tweets.map(
           ({
             tweetId,
@@ -85,7 +71,52 @@ export default function TweetsSection() {
               </article>
             )
           },
-        )}
+        )
+      ) : (
+        <article className="flex w-full flex-col gap-6 rounded-xl bg-white xl:min-w-[555px] xl:max-w-[555px]">
+          <header className="flex flex-row gap-4 p-4">
+            <Skeleton
+              animation="wave"
+              variant="circular"
+              width={64}
+              height={56.15}
+            />
+            <div className="flex w-full flex-col justify-center">
+              <Skeleton
+                animation="wave"
+                height={10}
+                width="80%"
+                style={{ marginBottom: 6 }}
+              />
+              <Skeleton
+                animation="wave"
+                height={10}
+                width="40%"
+                style={{ marginBottom: 6 }}
+              />
+            </div>
+          </header>
+          <Skeleton
+            sx={{ height: 330 }}
+            animation="wave"
+            variant="rectangular"
+          />
+          <div className="w-full p-4">
+            <Skeleton
+              animation="wave"
+              height={10}
+              width="80%"
+              style={{ marginBottom: 6 }}
+            />
+            <Skeleton
+              animation="wave"
+              height={10}
+              width="40%"
+              style={{ marginBottom: 6 }}
+            />
+          </div>
+        </article>
+      )}
     </section>
   )
 }

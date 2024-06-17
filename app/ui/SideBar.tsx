@@ -1,35 +1,59 @@
 'use client'
 
 import Image from 'next/image'
-import NavLinks from './NavLinks'
 import { signOut } from 'next-auth/react'
 import { useUserResponse } from '@/app/hooks/useResponse'
-import TweetCards from '@/app/ui/TweetCards'
-import TweetPost from '@/app/ui/PostSection'
-import { banger } from '@/app/ui/fonts'
+import { Skeleton } from '@mui/material'
 
 export default function SideBar() {
   const { response } = useUserResponse()
 
   return (
-    <aside className="botder-[#DFDEDA] h-fit w-full max-w-[225px] rounded-xl border-[1px] bg-white pb-4">
-      <section className="relative flex w-full flex-col items-center gap-14">
+    <aside className="botder-[#DFDEDA] h-fit w-full rounded-xl border-[1px] bg-white pb-4 xl:max-w-[225px]">
+      <section className="relative flex w-full flex-col items-center xl:gap-14">
         <div className="userBanner h-full min-h-[56.25px] w-full rounded-t-xl"></div>
-        <Image
-          className="absolute left-[90.5] top-5 scale-100 overflow-hidden rounded-full border-2 border-white"
-          alt={`Foto de perfil de ${response?.username}`}
-          src={`/${response?.avatarUrl}`}
-          height={64}
-          width={64}
-        />
-        <div className="flex flex-col items-center">
-          <h2 className="">{response?.fullname}</h2>
-          <span className="text-sm">
-            {`${response?.followers.length}`} seguidores
-          </span>
-        </div>
+        {response?.avatarUrl ? (
+          <Image
+            className="absolute left-[90.5] top-5 scale-100 overflow-hidden rounded-full border-2 border-white"
+            alt={`Foto de perfil de ${response?.username}`}
+            src={`/${response?.avatarUrl}`}
+            height={64}
+            width={64}
+          />
+        ) : (
+          <Image
+            className="absolute left-[90.5] top-5 scale-100 overflow-hidden rounded-full border-2 border-white"
+            alt={`Foto de perfil de ${response?.username}`}
+            src="/default-avatar.jpg"
+            height={64}
+            width={64}
+          />
+        )}
+        {response?.fullname ? (
+          <div className="mt-8 flex flex-col items-center xl:mt-0">
+            <h2 className="">{response?.fullname}</h2>
+            <span className="text-sm">
+              {`${response?.followers.length}`} seguidores
+            </span>
+          </div>
+        ) : (
+          <div className="mt-8 flex w-full flex-col items-center justify-center xl:mt-0">
+            <Skeleton
+              animation="wave"
+              height={10}
+              width="80%"
+              style={{ marginBottom: 6 }}
+            />
+            <Skeleton
+              animation="wave"
+              height={10}
+              width="40%"
+              style={{ marginBottom: 6 }}
+            />
+          </div>
+        )}
         <button
-          className="rounded-xl bg-[#f4f2ee] px-4 py-2 text-xs text-black hover:bg-black hover:text-white"
+          className="mt-2 rounded-xl bg-[#f4f2ee] px-4 py-2 text-xs text-black hover:bg-black hover:text-white xl:mt-0"
           onClick={() => {
             signOut()
           }}
