@@ -5,8 +5,18 @@ import { User } from '@/lib/interfaces'
 
 export async function GET(request: NextRequest): Promise<Response> {
   try {
+    const cookieName =
+      process.env.NODE_ENV === 'development'
+        ? 'next-auth.session-token'
+        : '__Secure-next-auth.session-token'
+
+    console.log({ cookieName })
+
     // Obtener el token JWT de la cookie
-    const token = request.cookies.get('next-auth.session-token')?.value
+    const token = request.cookies.get(cookieName)?.value
+    // const token =
+    //   request.cookies.get('next-auth.session-token')?.value ||
+    //   request.cookies.get('__Host-next-auth.session-token')?.value
 
     if (!token) {
       return new Response('No se encontró el token de sesión', { status: 401 })

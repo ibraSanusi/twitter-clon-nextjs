@@ -3,7 +3,18 @@ import { decode } from 'next-auth/jwt'
 import db from '@/services/db'
 
 export async function authMiddleware(request: NextRequest) {
-  const token = request.cookies.get('next-auth.session-token')?.value
+  const cookieName =
+    process.env.NODE_ENV === 'development'
+      ? 'next-auth.session-token'
+      : '__Host-next-auth.session-token'
+
+  console.log({ cookieName })
+
+  // Obtener el token JWT de la cookie
+  const token = request.cookies.get(cookieName)?.value
+  // const token =
+  //   request.cookies.get('next-auth.session-token')?.value ||
+  //   request.cookies.get('__Host-next-auth.session-token')?.value
 
   if (!token) {
     return NextResponse.json(
