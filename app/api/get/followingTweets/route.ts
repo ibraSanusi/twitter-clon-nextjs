@@ -11,7 +11,9 @@ import { decode } from 'next-auth/jwt'
 
 export async function GET(request: NextRequest): Promise<Response> {
   // Obtener el token JWT de la cookie
-  const token = request.cookies.get('next-auth.session-token')?.value
+  const token =
+    request.cookies.get('next-auth.session-token')?.value ||
+    request.cookies.get('__Host-next-auth.session-token')?.value
 
   if (!token) {
     return new Response('No se encontró el token de sesión', { status: 401 })
@@ -19,7 +21,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   const secret = process.env.NEXTAUTH_SECRET
   if (!secret) {
-    return new Response('No se encontró el secreto.', { status: 401 })
+    return new Response('No se encontró el secreto.', { status: 500 })
   }
 
   // Decodificar el token JWT para obtener los detalles de la sesión
@@ -65,7 +67,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   })
 
   if (!follows || follows.length === 0) {
-    return new Response(userEmail + ' no sigue a nadie.', { status: 400 })
+    return new Response(userEmail + ' no sigue a nadie.', { status: 404 })
   }
 
   const userIds = follows.map((follow) => follow.followingId)
