@@ -104,4 +104,5 @@ model CommentRetweet {
 enum Role {
   USER
   ADMIN
+  MANAGER
 }
