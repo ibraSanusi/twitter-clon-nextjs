@@ -38,7 +38,9 @@ export default function CommentCardInteractions({
         body: JSON.stringify({ commentId }),
       })
       if (!response.ok) {
-        alert('Error al eliminar el like del comentario con id: ' + commentId)
+        console.log(
+          'Error al eliminar el like del comentario con id: ' + commentId,
+        )
         return
       }
       setLiked(!liked)
@@ -52,7 +54,7 @@ export default function CommentCardInteractions({
       })
 
       if (!response.ok) {
-        alert('Error al dar like al comentario con id: ' + commentId)
+        console.log('Error al dar like al comentario con id: ' + commentId)
         return
       }
 
@@ -75,7 +77,7 @@ export default function CommentCardInteractions({
         body: JSON.stringify({ commentId }),
       })
       if (!response.ok) {
-        alert(
+        console.log(
           'Error al eliminar el retweet del comentario con id: ' + commentId,
         )
         return
@@ -92,7 +94,7 @@ export default function CommentCardInteractions({
       })
 
       if (!response.ok) {
-        alert('Error al dar retweet al comment con id: ' + commentId)
+        console.log('Error al dar retweet al comment con id: ' + commentId)
         return
       }
 

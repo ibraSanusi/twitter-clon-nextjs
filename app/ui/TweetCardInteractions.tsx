@@ -38,7 +38,7 @@ export default function TweetCardInteractions({
         body: JSON.stringify({ tweetId }),
       })
       if (!response.ok) {
-        alert('Error al eliminar el like del tweet con id: ' + tweetId)
+        console.log('Error al eliminar el like del tweet con id: ' + tweetId)
         return
       }
       setLiked(!liked)
@@ -52,7 +52,7 @@ export default function TweetCardInteractions({
       })
 
       if (!response.ok) {
-        alert('Error al dar like al tweet con id: ' + tweetId)
+        console.log('Error al dar like al tweet con id: ' + tweetId)
         return
       }
 
@@ -76,7 +76,7 @@ export default function TweetCardInteractions({
         body: JSON.stringify({ tweetId }),
       })
       if (!response.ok) {
-        alert('Error al eliminar el retweet del tweet con id: ' + tweetId)
+        console.log('Error al eliminar el retweet del tweet con id: ' + tweetId)
         return
       }
       setReposted(!reposted)
@@ -91,7 +91,7 @@ export default function TweetCardInteractions({
       })
 
       if (!response.ok) {
-        alert('Error al dar retweet al tweet con id: ' + tweetId)
+        console.log('Error al dar retweet al tweet con id: ' + tweetId)
         return
       }
 

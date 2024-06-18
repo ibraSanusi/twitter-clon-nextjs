@@ -26,7 +26,7 @@ export default function Chat() {
     setSocket(newSocket)
 
     if (!response?.username) {
-      // alert('No ha usuario')
+      // console.log('No ha usuario')
       return
     }
     const newUsername = response.username

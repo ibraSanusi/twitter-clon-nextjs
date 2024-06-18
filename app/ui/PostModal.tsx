@@ -31,7 +31,7 @@ export default function PostModal({
     })
 
     if (!response.ok) {
-      alert('Error al publicar el tweet')
+      console.log('Error al publicar el tweet')
       return
     }
 

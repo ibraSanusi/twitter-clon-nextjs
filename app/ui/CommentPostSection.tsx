@@ -26,7 +26,7 @@ export default function CommentPostSection({ response, tweetId }: Props) {
     })
 
     if (!response.ok) {
-      alert('Error al comentar el tweet')
+      console.log('Error al comentar el tweet')
       return
     }
 

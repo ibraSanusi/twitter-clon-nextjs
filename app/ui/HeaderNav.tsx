@@ -3,7 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {
-  BellAlertIcon,
+  Bellconsole.logIcon,
   BriefcaseIcon,
   ChatBubbleOvalLeftEllipsisIcon,
   HomeIcon,
@@ -45,7 +45,7 @@ export default function HeaderNav() {
         </li>
         <li className="flex w-14 flex-col items-center justify-center xl:w-20">
           <Link href="" className="flex flex-col items-center">
-            <BellAlertIcon className="w-6 content-center text-gray-600" />
+            <Bellconsole.logIcon className="w-6 content-center text-gray-600" />
             <span className="hidden text-xs xl:inline-block">
               Notificaciones
             </span>

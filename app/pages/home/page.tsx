@@ -15,7 +15,7 @@ export default function Page() {
       const response = await fetch('/api/get/followingTweets')
 
       if (!response.ok) {
-        alert('Error al intentar conseguir los tweets.')
+        console.log('Error al intentar conseguir los tweets.')
         return
       }
 
