@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon --watch websocket_server/websocket_message.js --exec next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "concurrently \"node websocket_server/websocket_message.js\" \"next start\"",
     "lint": "next lint",
     "seed": "node -r dotenv/config ./scripts/seed.js",
     "postinstall": "prisma generate"
