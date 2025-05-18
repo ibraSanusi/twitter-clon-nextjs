@@ -1,46 +1,79 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# 🐦 Clon de Twitter — Proyecto TFG
 
-## Getting Started
+Este proyecto es un **Trabajo de Fin de Grado (TFG)** desarrollado con fines didácticos. Se trata de un clon funcional de Twitter, creado con **Next.js**, **React.js** y **Tailwind CSS**, y desplegado en **Vercel**.
 
-First, run the development server:
+## 🚀 Objetivos del Proyecto
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+* Aprender y aplicar conceptos de **React**, **Next.js**, **HTML** y **CSS**.
+* Profundizar en herramientas del ecosistema moderno de desarrollo web (Prisma, Tailwind, NextAuth, etc.).
+* Implementar funcionalidades reales de una red social como Twitter.
 
-## Descripción
+---
 
-Proyecto de fin de grado (TFG). Clon de twitter hecho con nextjs y desplegado por vercel con fines didacticos.
+## ⚙️ Tecnologías Utilizadas
 
-Objetivo aprender React, NextJs y HTML, CSS y otros...
+* **Next.js** (App Router)
+* **React**
+* **Tailwind CSS**
+* **Prisma ORM**
+* **PostgreSQL**
+* **NextAuth** (no implementado aún)
+* **Socket.io** (no funcional por el momento)
 
-Tendrá funcionalidades de sugurida como autenticación, acciones de usuarios como seguir, postear, retweetear, like, comentar, etc...
+---
 
-## Diseño de Nixtio
+## ✨ Funcionalidades Implementadas
 
-### https://dribbble.com/Nixtio
+* Autenticación de usuarios (⚠️ aún no funcional/redirecciona correctamente)
+* Publicación de tweets
+* Dar "me gusta"
+* Retweet
+* Comentarios
+* Seguir/dejar de seguir usuarios
+
+---
+
+## 🧩 Pendiente por Mejorar
+
+* 🔄 **Redirecciones**: Actualmente la raíz de la app (`/`) **no redirige** automáticamente al login ni al dashboard. Esto está pendiente de implementación.
+* 💬 **Sección de chats**: aún **no funcional**.
+* 🔐 **NextAuth**: no ha sido completamente configurado.
+* 🧪 **Testing**: No se han implementado pruebas aún.
+* 📱 **Responsive design**: parcialmente adaptado, falta pulir en dispositivos móviles.
+
+---
+
+## 🎨 Inspiración en Diseño
+
+### ✏️ [Nixtio en Dribbble](https://dribbble.com/Nixtio)
 
 ![alt text](image.png)
 
-## Diseño de Logify web community
-
-### https://www.figma.com/file/DLbzjzDSNZE8S3hS5dRpsu/LOGIFY---WEB-LOGIN-UI-KIT-(Community)?type=design&node-id=0-1&mode=design&t=OrBOJaYz05D7kAPE-0
+### 📐 [Logify Web Login UI Kit en Figma](https://www.figma.com/file/DLbzjzDSNZE8S3hS5dRpsu/LOGIFY---WEB-LOGIN-UI-KIT-%28Community%29?type=design&node-id=0-1&mode=design&t=OrBOJaYz05D7kAPE-0)
 
 ![alt text](image-1.png)
 
-## Tecnologías utilizadas
+---
 
-1. Prisma
-2. Nextauth (por ahora no)
-3. Tailwind
-4. React
-5. NextJs
-6. Socket.io
+## 🛠️ Instalación Local
 
-> (Aún está por mejorar el README.md)
+Clona el repositorio y ejecuta el servidor de desarrollo:
+
+```bash
+git clone https://github.com/tu-usuario/twitter-clone-tfg.git
+cd twitter-clone-tfg
+pnpm install
+pnpm dev
+```
+
+También puedes usar `npm`, `yarn` o `bun` si lo prefieres.
+
+---
+
+## 📝 Notas Finales
+
+Este proyecto está en desarrollo y sirve como base para aprender y mejorar habilidades de desarrollo web fullstack moderno.
+
+> Si tienes sugerencias o encuentras errores, ¡estaré encantado de recibir feedback!
+
+---
